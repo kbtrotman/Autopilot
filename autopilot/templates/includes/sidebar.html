@@ -1,0 +1,45 @@
+<!-- DataAutpilot/templates/includes/menus/sidebar.html -->
+{% load allauth wagtailimages_tags %}
+{% load account %} {% load crispy_forms_tags %}
+{% load static wagtailcore_tags wagtailuserbar %}
+{% load webpack_loader %} {% load i18n %}
+
+
+  <Sidebar class="text-black collapse"  >
+    
+    <label style="border: 0;">
+
+      {% include 'includes/sidebar-splash.html' %}
+
+    </label>
+
+
+    <Menu data-simplebar class="main_menu main_menu_side hidden-print" >
+
+      {% include 'includes/menus/dashboard-menu.html'%}
+
+      {% include 'includes/menus/monitors-menu.html'%}
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      {% include 'includes/menus/unscheduled-events-menu.html'%}
+
+      {% include 'includes/menus/scheduled-events-menu.html'%}
+      
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      {% include 'includes/menus/creator-menu.html'%}
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      {% include 'includes/menus/settings-menu.html' %}
+
+      {% include 'includes/menus/product-doc-menu.html' %}
+
+      {% include 'includes/menus/support-menu.html' %}
+
+      {% include 'includes/menus/github-menu.html' %}
+
+    </Menu>
+
+  </Sidebar>

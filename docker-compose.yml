@@ -1,0 +1,47 @@
+version: "3.3"
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./runtime/
+      dockerfile: Dockerfile
+    volumes:
+      - ./runtime/src:/code/runtime/src/
+      - ./runtime/public:/code/runtime/public/
+      - ./runtime/node_modules:/code/runtime/node_modules/
+
+  backend:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/code/
+    ports:
+      - 8000:8000
+
+  postgres:
+    container_name: postgres
+    image: postgres:16.3-bullseye
+      - 5432:5432
+    environment:
+      POSTGRES_USER: autopilot
+      POSTGRES_PASSWORD: autopilot
+      POSTGRES_DB: autopilot
+    volumes:
+      - /var/lib/pgsql/data:/var/lib/postgresql/data
+
+  proxy:
+    image: traefik:v3.1
+    container_name: proxy
+    ports:
+      - 8011:8011
+    volumes:
+      - ./traefik.toml:/etc/traefik/traefik.toml
+
+  mail:
+    container_name: mail
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025

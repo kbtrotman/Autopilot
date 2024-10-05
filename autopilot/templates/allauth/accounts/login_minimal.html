@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load navigation_tags wagtailimages_tags %}
+{% load account %}
+
+{% csrf_token %}
+{{ form_c.as_p }}

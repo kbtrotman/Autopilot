@@ -1,0 +1,48 @@
+<!-- DataAutpilot/templates/includes/navigation.html -->
+{% load allauth wagtailimages_tags %}
+{% load account %} {% load crispy_forms_tags %}
+{% load static wagtailcore_tags wagtailuserbar %}
+{% load webpack_loader %} {% load i18n %}
+
+
+<!-- Top NAV Bar -->
+
+  <AppBar position="static">
+    <Toolbar
+      sx={{
+        width: "100%",
+        maxWidth: 60,
+      }}
+    >
+
+      <box class="nav-item bg-black" position="fixed">
+        <IconButton
+          aria-label="Sidebar"
+          id="sidebar-button"
+          aria-controls={open ? 'sidebar-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </box>
+
+      <box class="nav-item">
+
+      </box>
+      
+        Data Autopilot
+
+      <!-- Navbar Apps -->
+
+      <box class="nav-item">
+        {% include 'includes/topnavbar/right-navbar-user-icon.html' %}
+      <box>
+
+
+      </ToolBar>
+
+  </AppBar>
+
+<!-- Top NAV Bar -->

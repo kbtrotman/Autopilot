@@ -1,0 +1,85 @@
+<!-- DataAutpilot/templates/base.html -->
+{% load allauth wagtailimages_tags %}
+{% load account %} {% load crispy_forms_tags %}
+{% load static wagtailcore_tags wagtailuserbar %}
+{% load webpack_loader %} {% load i18n %}
+
+<!--
+Data Autopilot
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Primary Meta Tags -->
+
+    <title>
+      Data Autopilot Dashboard - {% block title %}{% endblock %} | Kevin Trotman
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    {% include 'includes/stylesheets.html' %}
+    
+    <!-- Specific Page JS goes HERE  -->    
+    {% block stylesheets %}{% endblock stylesheets %}
+  <style>
+    *{
+      font-familt: "Roboto", sans-serif;
+    }
+  </style>
+
+  </head>
+
+  <body>  
+
+
+
+    
+    <section>
+
+      <header>
+        {% include 'includes/navigation.html' %}
+      </header>
+
+
+      <article>
+        {% if user.is_authenticated %}
+
+          {% block body %}
+          {% endblock body %}
+
+          {% block content %}
+          {% endblock content %} 
+
+        {% else %}
+
+          {% include 'includes/not-logged-in-message.html'%}
+
+        {% endif %}
+      </article>
+
+    </section>
+
+  </body>
+
+  <footer>
+    {% include 'includes/footer.html' %}
+  </footer>
+
+  {% include 'includes/settings-box.html' %}
+
+  {% include 'includes/scripts.html' %}
+    
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}{% endblock javascripts %}  
+
+</html>

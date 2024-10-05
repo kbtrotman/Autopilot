@@ -1,0 +1,36 @@
+<!-- Right Navbar User Icon Menu -->
+
+    <box
+        sx={{
+            width: "10%",
+            maxWidth: 60
+        }}
+    >
+
+    <IconButton
+    id="basic-button"
+    size="large"
+    aria-controls="basic-menu"
+    aria-haspopup="true"
+    aria-expanded={open ? 'true' : undefined}
+    onClick={handleClick}
+>
+    <AccountCircle />
+</IconButton>
+<Menu
+    id="basic-menu"
+    anchorEl={anchorEl}
+    open={open}
+    onClose={handleClose}
+    MenuListProps={{
+        'aria-labelledby': 'basic-button',
+    }}
+>
+    <MenuItem onClick={handleClose}>Profile</MenuItem>
+    <MenuItem onClick={handleClose}>My account</MenuItem>
+    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+</Menu>
+
+    </box>
+
+<!-- Right Navbar User Icon Menu -->

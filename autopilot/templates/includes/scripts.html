@@ -1,0 +1,95 @@
+<!-- DataAutpilot/templates/includes/scripts.html -->
+{% load allauth wagtailimages_tags %}
+{% load account %} {% load crispy_forms_tags %}
+{% load static wagtailcore_tags wagtailuserbar %}
+{% load webpack_loader %} {% load i18n %}
+
+<!-- jQuery -->
+<script src="{% static './js/node_modules/jquery/dist/jquery.min.js' %}"></script>
+
+<!-- Core --> <!-- Bootstrap -->
+<script src="{% static 'assets/vendor/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+<script src="{% static 'js/node_modules/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+<!-- bootstrap-daterangepicker -->
+<script src="{% static './js/node_modules/moment/min/moment.min.js' %}"></script>
+<script src="{% static './js/node_modules/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+
+<!-- bootstrap-wysiwyg -->
+<script src="{% static './js/node_modules/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js' %}"></script>
+<script src="{% static './js/node_modules/jquery.hotkeys/jquery.hotkeys.js' %}"></script>
+<script src="{% static './js/node_modules/google-code-prettify/src/prettify.js' %}"></script>
+
+<!-- jQuery Tags Input -->
+<script src="{% static './js/node_modules/tags-input/tags-input.js' %}"></script>
+
+<!-- jQuery autocomplete -->
+<script src="{% static './js/node_modules/devbridge-autocomplete/dist/jquery.autocomplete.min.js' %}"></script>
+
+<!-- Vendor JS -->
+<script src="{% static 'assets/vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+
+<!-- Slider -->
+<script src="{% static 'assets/vendor/nouislider/distribute/nouislider.min.js' %}"></script>
+
+<!-- Smooth scroll -->
+<script src="{% static 'assets/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+
+<!-- Charts -->
+<script type="module" src="{% static 'js/node_modules/chartist/dist/index.js' %}"></script>
+<script src="{% static 'assets/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+
+<!-- Sweet Alerts 2 -->
+<script src="{% static 'assets/vendor/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+
+<!-- Moment JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+<!-- Notyf -->
+<script src="{% static 'assets/vendor/notyf/notyf.min.js' %}"></script>
+
+<!-- Simplebar -->
+<script src="{% static 'assets/vendor/simplebar/dist/simplebar.min.js' %}"></script>
+
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- FastClick -->
+<script src="{% static './js/node_modules/fastclick/lib/fastclick.js' %}"></script>
+
+<!-- NProgress -->
+<script src="{% static './js/node_modules/nprogress/nprogress.js' %}"></script>
+
+<!-- bootstrap-progressbar -->
+<script src="{% static './js/node_modules/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+
+<!-- iCheck -->
+<script src="{% static './js/node_modules/icheck/icheck.min.js' %}"></script>
+
+<!-- Switchery -->
+<script type="module" src="{% static './js/node_modules/switchery/switchery.js' %}"></script>
+
+<!-- Select2 -->
+<script src="{% static './js/node_modules/select2/dist/js/select2.full.min.js' %}"></script>
+
+<!-- Parsley -->
+<script src="/{% static './js/node_modules/parsleyjs/dist/parsley.min.js' %}"></script>
+
+<!-- Autosize -->
+<script src="{% static './js/node_modules/autosize/dist/autosize.min.js' %}"></script>
+
+<!-- starrr -->
+<script src="{% static './js/node_modules/starrr/dist/starrr.js' %}"></script>
+
+<!-- Flowbite -->
+<script src="{% static './js/node_modules/flowbite/dist/flowbite.min.js' %}"></script>
+
+<!-- react-sidebar -->
+<script src="{% static './js/node_modules/react-pro-sidebar/dist/index.js' %}"></script>
+
+
+<!-- All of my own React and MaterialsUI scripts-->
+<!-- Just FYI, DAP is heavily developed with React and MaterialsUI components -->
+<!-- Both React and google's MUI make dev so much easier, so expect them everywhere! -->
+<script src="{% static './js/index.js'%}"> </script>  <!-- Over-all Loader. Doesn;t do much -->
+<script src="{% static './js/App.js'%}"> </script>  <!-- This is everything important in the UI -->
