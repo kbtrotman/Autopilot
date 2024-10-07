@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 const MAILCATCHER_URL = 'http://localhost:1080'
-const BASE_URL = 'http://localhost:10000'
+const BASE_URL = 'http://frontend:8011'
 
 function emailFactory () {
   return `test-${Math.round(Math.random() * 100000000000)}@test.allauth.org`

@@ -4,7 +4,6 @@
 {% load static wagtailcore_tags wagtailuserbar %}
 {% load webpack_loader %} {% load i18n %}
 
-{% csrf_token %}
 {{ form_c.as_p }}
 
     <!-- Login Model Dialog -->
@@ -20,7 +19,6 @@
             </div>
             <div class="modal-body" style="padding:40px 50px;">
             <form role="form" action="{% url 'login_url' %}" method="post">
-                {% csrf_token %}
                 {{ form.as_p }}
                 
                 <div class="form-group text-black">

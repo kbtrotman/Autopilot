@@ -8,28 +8,30 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 
 const mainListItems = [
-    { text: 'Dashboard', icon: <HomeRoundedIcon />, target: '/' },
-    { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
-    { text: 'Unscheduled Events', icon: <PeopleRoundedIcon /> },
-    { text: 'Scheduled Events', icon: <AssignmentRoundedIcon /> },
-    { text: 'Creators', icon: <AssignmentRoundedIcon />,
-      target: 'tasks/' },
+    { nest: 'True', text: 'Dashboard', icon: <HomeRoundedIcon /> },
+    { nest: 'False', text: 'Analytics', icon: <AnalyticsRoundedIcon />, target:  },
+    { nest: 'False', text: 'Unscheduled Events', icon: <PeopleRoundedIcon /> },
+    { nest: 'False', text: 'Scheduled Events', icon: <AssignmentRoundedIcon /> },
+    { nest: 'True', text: 'Creators', icon: <AssignmentRoundedIcon /> },
   ];
   
   const secondaryListItems = [
-    { text: 'Settings', icon: <SettingsRoundedIcon /> },
-    { text: 'About', icon: <InfoRoundedIcon /> },
-    { text: 'AP Feedback', icon: <HelpRoundedIcon /> },
-    { text: 'Check for updates', icon: <HelpRoundedIcon /> },
-    { text: 'Documentation', icon: <HelpRoundedIcon /> },
-    { text: 'Github Site', icon: <HelpRoundedIcon /> },
+    { nest: 'true', text: 'Settings', icon: <SettingsRoundedIcon /> },
+    { nest: 'False', text: 'About', icon: <InfoRoundedIcon /> },
+    { nest: 'False', text: 'AP Feedback', icon: <HelpRoundedIcon /> },
+    { nest: 'False', text: 'Check for updates', icon: <HelpRoundedIcon /> },
+    { nest: 'False', text: 'Documentation', icon: <HelpRoundedIcon /> },
+    { nest: 'False', text: 'Github Site', icon: <HelpRoundedIcon /> },
   ];
 
   const SubListItems = [
-    { index: 0, text: 'Edit Dashboard', icon: <HomeRoundedIcon /> },
-    { index: 0, text: 'New Dashboard', icon: <AnalyticsRoundedIcon /> },
-    { index: 0, text: 'Select Dashboard', icon: <PeopleRoundedIcon /> },
-    { index: 0, text: 'Add to Favorites', icon: <PeopleRoundedIcon /> },
+    { list: 0, text: 'Edit Dashboard', icon: <HomeRoundedIcon />, target: '/dashboard?edit' },
+    { list: 0, text: 'New Dashboard', icon: <AnalyticsRoundedIcon />, target: '/dashboard?new' },
+    { list: 0, text: 'Select Dashboard', icon: <PeopleRoundedIcon />, target: 'dashboard?select' },
+    { list: 0, text: 'Add to Favorites', icon: <PeopleRoundedIcon />, target: '/dfashboard?favorite' },
+    { list: 4, text: 'Tasks', icon: <AnalyticsRoundedIcon />, target: '/tasks' },
+    { list: 5, text: 'Users', icon: <PeopleRoundedIcon />, target: '/users' },
+    { list: 5, text: 'Groups', icon: <PeopleRoundedIcon />, target: '/groups' },
   ];
 
   export {mainListItems, secondaryListItems, SubListItems};

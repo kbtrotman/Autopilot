@@ -1,7 +1,7 @@
 Autopilot:
 -----------------------------------------------------------------------------
 
-NOTE: The project has been re-written from a front-end that just runs canned scripts and RESTful calls to a full-fleged frontend and middleware for Automation as a Service enablement. In that process, the name was also changed and a full Javascript admin interface was added that rests on top of a new RESTful API.
+NOTE: The project has been re-written from a front-end that just runs canned scripts and RESTful calls to a full-fleged frontend and middleware for Automation as a Service enablement. In that process, the name was also changed and a full Javascript admin interface was added that rests on top of a new RESTful API. A complete docker container config was added that allows the app to be portable to any cloud service, including local-only kubernetes configs.
 
 ![Alt text](dap.png)
 
@@ -84,4 +84,19 @@ Installation:
 AP is currently about 60% through dev to a first release. An alpha release will be coming soon. Installation will be via a docker container or tar file. Stay tuned
 
 
-{Add instructions here....}
+A docker-compose.yml file is offered which you can use to easily run the example project locally if you have docker installed. It consists of the following containers:
+
+backend: The Django backend layer (all python) running allauth.headless. The backend runs on port 8000 andis accessible through Restful API and Allauth auth.
+
+frontend: The frontend (React) project, running on port 3000. This includes the full GUI interface.
+
+postgres: the postgres database which the backend depends on.
+
+proxy: A proxy service (Traefik), running on port 8011, that, depending on the URL/connection, forwards either to the postgres, backend or frontend service, depending on which is managing that service.
+
+mail: A dummy email (SMTP) service (MailCatcher) for development. that you can use to test e.g. email verification and password reset flows. Since there is no alpha release, there is no true e-mail service yet.
+
+To spin up the full app, run:
+
+# docker compose up
+Then, once the containers are built and running, open your favorite browser and visit the app at http://localhost:8011.

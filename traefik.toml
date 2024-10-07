@@ -20,8 +20,14 @@ watch = true
 [entryPoints]
 [entryPoints.web]
 address = ":8011"
-[entryPoints.tcp]
-address = ":5432"
+    [entryPoints.web.forwardedHeaders]
+      insecure = true
+  [entryPoints.tcp]
+    address = ":5432"
+    [entryPoints.tcp.transport]
+      [entryPoints.tcp.transport.respondingTimeouts]
+        idleTimeout = "120s"  # Time the TCP connection can stay idle before closing
+        readTimeout = "60s"   # Time Traefik waits for Postgres to start responding
 
 [http.routers]
 

@@ -8,7 +8,7 @@ import Copyright from '../internals/components/Copyright';
 import axios from 'axios';
 
 
-let API_URL = 'http://localhost:8000/api';
+let API_URL = 'http://backend:8000/api';
 
 const columns = [
   { field: 'id', headerName: 'ID', type: 'number', width: 10 },

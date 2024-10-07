@@ -1,13 +1,11 @@
-FROM node:18
+FROM node:20
 
-WORKDIR /code/runtime
+WORKDIR /code/
 COPY package.json ./package.json
+RUN npm install
 COPY ./src ./src
 COPY ./public ./public
-COPY ./node_modules ./node_modules
-RUN npm install
+
 EXPOSE 3000
 
-RUN npm install n -g
-RUN npm install -g npm@latest
-RUN npm start
+CMD ["npm", "start"]

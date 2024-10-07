@@ -9,7 +9,7 @@ const LoginForm = () => {
   
       event.preventDefault();
   
-      axios.post('http://localhost:8000/api-token-auth/', { username, password })
+      axios.post('http://backend:8000/api-token-auth/', { username, password })
   
         .then(res => {
   

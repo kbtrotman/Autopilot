@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}Autopilot: Please Confirm Your Email Address{% endblocktrans %}
+{% endautoescape %}

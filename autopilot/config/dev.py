@@ -8,7 +8,6 @@ SECRET_KEY = "django-insecure-20_uu*8p1zw3qwk6weis9$p@4@9=q_mtcv%g)fc=^7#9*9zm1-
 
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["http://frontend", "https://frontend"]
 
 
 INTERNAL_IPS = [

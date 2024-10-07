@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   frontend:
     container_name: frontend
@@ -6,9 +5,11 @@ services:
       context: ./runtime/
       dockerfile: Dockerfile
     volumes:
+      - ./runtime/:/code/runtime/
       - ./runtime/src:/code/runtime/src/
       - ./runtime/public:/code/runtime/public/
-      - ./runtime/node_modules:/code/runtime/node_modules/
+    ports:
+      - 3000:3000
 
   backend:
     container_name: backend
@@ -23,11 +24,8 @@ services:
   postgres:
     container_name: postgres
     image: postgres:16.3-bullseye
+    ports:
       - 5432:5432
-    environment:
-      POSTGRES_USER: autopilot
-      POSTGRES_PASSWORD: autopilot
-      POSTGRES_DB: autopilot
     volumes:
       - /var/lib/pgsql/data:/var/lib/postgresql/data
 

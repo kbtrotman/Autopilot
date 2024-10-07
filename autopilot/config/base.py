@@ -56,10 +56,10 @@ INSTALLED_APPS = [
     'compressor',
     'corsheaders',
     "allauth.account",
+    "allauth.headless",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.dummy",
     "allauth.mfa",
-    "allauth.headless",
     "allauth.usersessions",
     'rest_framework',
     'rest_framework.authtoken',
@@ -195,16 +195,21 @@ INSTALLED_APPS = [
 ]
 
 #For the RESTful API and JavaScript frontend authentication
+
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',  # Use token authentication
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',  # Ensure users are authenticated
     ),
 }
+
+
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -213,6 +218,9 @@ MIDDLEWARE = [
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
     'corsheaders.middleware.CorsMiddleware',
+    # Custom
+    'autopilot.middleware.DisableCSRFMiddlewareForAPIs',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = "autopilot.urls"
@@ -340,14 +348,12 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "/" 
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 4
 ACCOUNT_USERNAME_MIN_LENGTH = 6
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -361,9 +367,9 @@ ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
 
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
@@ -377,4 +383,5 @@ HEADLESS_FRONTEND_URLS = {
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_PASSKEY_SIGNUP_ENABLED = True
+
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
