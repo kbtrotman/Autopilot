@@ -98,5 +98,5 @@ mail: A dummy email (SMTP) service (MailCatcher) for development. that you can u
 
 To spin up the full app, run:
 
-# docker compose up
+$ docker compose up
 Then, once the containers are built and running, open your favorite browser and visit the app at http://localhost:8011.
