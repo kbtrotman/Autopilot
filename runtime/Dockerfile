@@ -1,6 +1,7 @@
-FROM node:20
+FROM node:20.18.0-bullseye
 
-WORKDIR /code/
+RUN mkdir -p /code/runtime/
+WORKDIR /code/runtime/
 COPY package.json ./package.json
 RUN npm install
 COPY ./src ./src

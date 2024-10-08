@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -7,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import { Link } from "react-router-dom";
 import {mainListItems, secondaryListItems, SubListItems} from '../subpages/Menu-Lists';
-
+import Collapse from '@mui/material/Collapse';
 
 export default function MenuContent() {
   const [open, setOpen] = useState({}); // Track collapse state for each item

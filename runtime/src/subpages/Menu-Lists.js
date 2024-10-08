@@ -9,7 +9,7 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
     { nest: 'True', text: 'Dashboard', icon: <HomeRoundedIcon /> },
-    { nest: 'False', text: 'Analytics', icon: <AnalyticsRoundedIcon />, target:  },
+    { nest: 'False', text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
     { nest: 'False', text: 'Unscheduled Events', icon: <PeopleRoundedIcon /> },
     { nest: 'False', text: 'Scheduled Events', icon: <AssignmentRoundedIcon /> },
     { nest: 'True', text: 'Creators', icon: <AssignmentRoundedIcon /> },

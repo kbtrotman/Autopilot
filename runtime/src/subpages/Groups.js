@@ -65,13 +65,30 @@ const columns = [
 
 
 function callRestApi(endpoint, method = 'GET', body) {
-    return axios({
-        method,
-        url: `${API_URL}/${endpoint}`,
-        data: body
-    }).catch(err => {
-        console.log(err);
-    });
+  // Retrieve the session token from sessionStorage
+  const sessionToken = window.sessionStorage.getItem('sessionToken');
+  
+  // Create the headers object
+  const headers = {
+      'Accept': 'application/json'  // You can add other headers here as needed
+  };
+  
+  // Include the Authorization token if available
+  if (sessionToken) {
+      headers['Authorization'] = `Token ${sessionToken}`;
+  } else {
+      console.warn('No session token found in storage. This request might fail if authorization is required.');
+  }
+
+  // Make the axios call with the dynamic headers
+  return axios({
+      method,
+      url: `${API_URL}/${endpoint}`,
+      data: body,
+      headers  // Pass the headers object here
+  }).catch(err => {
+      console.error('Request failed:', err);
+  });
 }
 
 

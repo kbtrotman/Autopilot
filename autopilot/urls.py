@@ -8,7 +8,8 @@ from rest_framework.routers import DefaultRouter
 from tasks import views as task_view
 from groups import views as group_view
 from users import views as user_view
-
+ 
+ 
 router = DefaultRouter()
 router.register(r'tasks', task_view.TaskViewSet)
 router.register(r'groups',group_view.GroupViewSet)

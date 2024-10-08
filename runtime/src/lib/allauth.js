@@ -7,7 +7,7 @@ const Client = Object.freeze({
 });
 
 const CLIENT = Client.BROWSER;
-const BASE_URL = `_allauth/${CLIENT}/v1`;
+const BASE_URL = `http://backend:8000/_allauth/${CLIENT}/v1`;
 const ACCEPT_JSON = {
   Accept: 'application/json'
 };
@@ -66,9 +66,8 @@ export const AuthenticatorType = Object.freeze({
   WEBAUTHN: 'webauthn'
 });
 
-const tokenStorage = window.sessionStorage;
-
 async function request(method, path, data, headers = {}) {
+  // Prepare request options
   const options = {
     method,
     url: path,
@@ -79,26 +78,35 @@ async function request(method, path, data, headers = {}) {
     data
   };
 
-  // Handle authentication by adding the session token to the Authorization header
-  if (path !== URLs.CONFIG) {
-    const sessionToken = tokenStorage.getItem('sessionToken');
-    if (sessionToken) {
-      options.headers['Authorization'] = `Token ${sessionToken}`;
-    }
+  // Include Authorization token if available
+  const sessionToken = window.sessionStorage.getItem('sessionToken');
+  if (sessionToken) {
+    options.headers['Authorization'] = `Token ${sessionToken}`;
+  } else {
+    console.warn('No session token found in storage. This request might fail if authorization is required.');
+  }
+
+  // Include CSRF token if available
+  const csrfToken = getCSRFToken();
+  if (csrfToken) {
+    options.headers['X-CSRFToken'] = csrfToken;
+  } else {
+    console.warn('CSRF token is missing. This request might fail if CSRF protection is enabled on the server.');
   }
 
   try {
+    // Perform the request
     const response = await axios(options);
     const msg = response.data;
 
     // Handle invalid session tokens (status 410)
     if (msg.status === 410) {
-      tokenStorage.removeItem('sessionToken');
+      window.sessionStorage.removeItem('sessionToken');
     }
 
     // Store new session token if provided in response
     if (msg.meta?.session_token) {
-      tokenStorage.setItem('sessionToken', msg.meta.session_token);
+      window.sessionStorage.setItem('sessionToken', msg.meta.session_token);
     }
 
     // Dispatch an event on authentication status change
@@ -109,8 +117,25 @@ async function request(method, path, data, headers = {}) {
 
     return msg;
   } catch (error) {
-    console.error('Request failed:', error);
-    throw error;
+    // Check if the error is an expected 401 response and handle it without throwing
+    if (error.response && error.response.status === 401) {
+      console.warn('Unauthorized access - 401:', error.response.data);
+      return error.response.data;  // Return the response data for further handling
+    }
+
+    // Enhanced error handling for other statuses
+    if (error.response) {
+      // Server responded with a status other than 2xx
+      console.error(`Error: ${error.response.status} - ${error.response.statusText}`);
+      console.error('Response data:', error.response.data);
+    } else if (error.request) {
+      // Request was made, but no response received
+      console.error('No response received:', error.request);
+    } else {
+      // Other errors
+      console.error('Error:', error.message);
+    }
+    throw error;  // Re-throw other errors after logging them
   }
 }
 
@@ -256,14 +281,61 @@ export async function authenticateByToken(providerId, token, process = AuthProce
   });
 }
 
-export function redirectToProvider(providerId, callbackURL, process = AuthProcess.LOGIN) {
-  postForm(URLs.REDIRECT_TO_PROVIDER, {
-    provider: providerId,
-    process,
-    callback_url: callbackURL,
-    csrfmiddlewaretoken: getCSRFToken()
-  });
+export async function redirectToProvider(providerId, callbackURL, process = AuthProcess.LOGIN) {
+  try {
+    // Prepare form data for the request
+    const formData = new URLSearchParams();
+    formData.append('provider', providerId);
+    formData.append('process', process);
+    formData.append('callback_url', callbackURL);
+    
+    // Include CSRF token if needed
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+      formData.append('csrfmiddlewaretoken', csrfToken);
+    } else {
+      console.warn('CSRF token is missing. This request might fail if CSRF protection is enabled on the server.');
+    }
+
+    // Prepare request headers
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    // Check and add the Authorization header if the session token exists
+    const sessionToken = window.sessionStorage.getItem('sessionToken');
+    if (sessionToken) {
+      headers['Authorization'] = `Token ${sessionToken}`;
+    } else {
+      console.warn('No session token found in storage. This request might fail if authorization is required.');
+    }
+
+    // Perform the request
+    const response = await axios.post(URLs.REDIRECT_TO_PROVIDER, formData, { headers });
+
+    // Check for redirect URL in the response data and navigate there
+    if (response.data && response.data.redirect_url) {
+      window.location.href = response.data.redirect_url;
+    } else {
+      console.error('No redirect URL found in the response.');
+    }
+
+  } catch (error) {
+    // Handle different types of errors
+    if (error.response) {
+      // Server responded with a status other than 2xx
+      console.error(`Error: ${error.response.status} - ${error.response.statusText}`);
+      console.error('Response data:', error.response.data);
+    } else if (error.request) {
+      // Request was made, but no response received
+      console.error('No response received:', error.request);
+    } else {
+      // Other errors, such as issues setting up the request
+      console.error('Error:', error.message);
+    }
+  }
 }
+
 
 export async function getWebAuthnCreateOptions(passwordless) {
   let url = URLs.WEBAUTHN_AUTHENTICATOR;
@@ -277,4 +349,48 @@ export async function getWebAuthnCreateOptionsAtSignup() {
   return await request('GET', URLs.SIGNUP_WEBAUTHN);
 }
 
-export async function addWebAuthnCredential(name
+export async function addWebAuthnCredential (name, credential) {
+  return await request('POST', URLs.WEBAUTHN_AUTHENTICATOR, {
+    name,
+    credential
+  })
+}
+
+export async function signupWebAuthnCredential (name, credential) {
+  return await request('PUT', URLs.SIGNUP_WEBAUTHN, {
+    name,
+    credential
+  })
+}
+
+export async function deleteWebAuthnCredential (ids) {
+  return await request('DELETE', URLs.WEBAUTHN_AUTHENTICATOR, { authenticators: ids })
+}
+
+export async function updateWebAuthnCredential (id, data) {
+  return await request('PUT', URLs.WEBAUTHN_AUTHENTICATOR, { id, ...data })
+}
+
+export async function getWebAuthnRequestOptionsForReauthentication () {
+  return await request('GET', URLs.REAUTHENTICATE_WEBAUTHN)
+}
+
+export async function reauthenticateUsingWebAuthn (credential) {
+  return await request('POST', URLs.REAUTHENTICATE_WEBAUTHN, { credential })
+}
+
+export async function authenticateUsingWebAuthn (credential) {
+  return await request('POST', URLs.AUTHENTICATE_WEBAUTHN, { credential })
+}
+
+export async function loginUsingWebAuthn (credential) {
+  return await request('POST', URLs.LOGIN_WEBAUTHN, { credential })
+}
+
+export async function getWebAuthnRequestOptionsForLogin () {
+  return await request('GET', URLs.LOGIN_WEBAUTHN)
+}
+
+export async function getWebAuthnRequestOptionsForAuthentication () {
+  return await request('GET', URLs.AUTHENTICATE_WEBAUTHN)
+}
