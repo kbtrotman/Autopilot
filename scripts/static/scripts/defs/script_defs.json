@@ -1,0 +1,19 @@
+{
+    "scripts": [
+      {
+        "name": "pingable",
+        "script_path": "/static/tasks/defs/pingable.py",
+        "interpreter": "python",
+        "args": "args",
+
+      },
+      {
+        "name": "some_other_script",
+        "script_path": "/static/tasks/defs/some_other_api.openapi.json"
+      },
+      {
+        "name": "another_script",
+        "script_path": "/static/tasks/defs/another_api.openapi.json"
+      }
+    ]
+  }

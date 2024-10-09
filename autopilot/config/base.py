@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "allauth.usersessions",
     'rest_framework',
-    'rest_framework.authtoken',
 
     # Optional -- requires install using `django-allauth[socialaccount]`.
     # Enterprises shouldn;t use social providers, but if you have a burning
@@ -197,11 +196,8 @@ INSTALLED_APPS = [
 #For the RESTful API and JavaScript frontend authentication
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',  # Use token authentication
-    ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Ensure users are authenticated
+        'rest_framework.permissions.AllowAny',  # Ensure users are authenticated
     ),
 }
 

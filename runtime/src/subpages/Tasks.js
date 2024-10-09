@@ -21,18 +21,24 @@ const columns = [
   {
     field: 'hrname',
     headerName: 'Human-readable name',
-    width: 100,
+    width: 50,
     editable: true,
   },
   {
     field: 'description',
     headerName: 'Description',
-    width: 300,
+    width: 50,
     editable: true,
   },
   {
-    field: 'type',
+    field: 'product',
     headerName: 'Product Type',
+    sortable: true,
+    width: 50,
+  },
+  {
+    field: 'yaml_file',
+    headerName: 'OpenAPI Def File',
     sortable: true,
     width: 50,
   },
@@ -40,13 +46,13 @@ const columns = [
     field: 'input',
     headerName: 'Input JSON',
     sortable: true,
-    width: 200,
+    width: 50,
   },
   {
     field: 'output',
     headerName: 'Output JSON',
     sortable: true,
-    width: 200,
+    width: 50,
   },
   {
     field: 'send',
@@ -133,16 +139,29 @@ export default class Tasks extends React.Component {
           </Typography>
 
 
-        <ButtonGroup
-          disableElevation
-          variant="contained"
-          color='inherit'
-          size='small'
-        >
-          <Button>Add Task</Button>
-          <Button>Edit Selected</Button>
-          <Button>Delete Selected</Button>
-        </ButtonGroup>
+          <ButtonGroup
+            disableElevation
+            variant="contained"
+            color='inherit'
+            size='small'
+          >
+
+
+            <input
+              accept=".yaml"
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              multiple
+              type="file"
+              />
+                <label htmlFor="raised-button-file">
+                <Button variant="raised" component="span">
+                  New API
+                </Button>
+                </label>
+
+            <Button>Edit Selected</Button>
+          </ButtonGroup>
 
         </ Box>
 

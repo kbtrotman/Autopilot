@@ -1,25 +1,11 @@
 import json
 import requests
 
-class RestAPI:
-    def __init__(self, name, openapi_path):
-        self.name = name
-        self.openapi_path = openapi_path
-
-    def load_openapi(self):
-        # Simulate loading OpenAPI definition (assuming JSON format)
-        try:
-            with open(self.openapi_path, 'r') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            print(f"Error: OpenAPI file {self.openapi_path} not found.")
-            return None
-
-    def __repr__(self):
-        return f"RestAPI(name={self.name}, openapi_path={self.openapi_path})"
+# Static URL where the JSON file is hosted
+json_url = "http://frontend/tasks/defs/api_defs.json"
 
 # Function to load API definitions from an external JSON file (web link or local)
-def load_apis_from_web(json_url):
+def load_apis_from_web():
     try:
         response = requests.get(json_url)
         response.raise_for_status()  # Check for HTTP errors
@@ -36,23 +22,18 @@ def load_apis_from_web(json_url):
 
     return apis
 
-# Example URL where the JSON file is hosted
-json_url = "/static/tasks/api_defs.json"
 
-# Load APIs dynamically from the web
-api_list = load_apis_from_web(json_url)
+
 
 # Check if APIs loaded successfully
-if api_list:
-    print("Loaded APIs:")
-    for api in api_list:
-        print(api)
-else:
-    print("No APIs loaded.")
+def api_did_load(api_list):
+    if api_list:
+        return True
+    else:
+        return False
+    
 
-# Example usage: Loading OpenAPI spec for each API
-for api in api_list:
-    print(f"Loading OpenAPI spec for: {api.name}")
-    openapi_data = api.load_openapi()  # This would load the OpenAPI spec
-    if openapi_data:
-        print(f"Successfully loaded OpenAPI spec for {api.name}")
+# Save the JSON data back into the list file when new APIs added
+def save_apis_to_web(json_packet):
+    response = requests.post(json_url, json=json_packet)
+
