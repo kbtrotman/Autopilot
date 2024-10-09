@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from .models import Task
+from .models import TaskModel
 from .serializers import TaskSerializer
 from apiClient import importNewAPIDef
 
@@ -34,7 +34,7 @@ class TaskViewSet(ModelViewSet):
                 destination.write(chunk)
 
         # Import the new file (which should be standard YAML)
-        importNewAPIDef()
+        importNewAPIDef(save_path)
 
         # Return a success response with the file URL
         file_url = f'/static/tasks/defs/{filename}'
