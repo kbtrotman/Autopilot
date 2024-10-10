@@ -1,5 +1,4 @@
 from django.db import models
-import add_new_api_def() from tasks.apiClient
 
 class TaskModel(models.Model):
     t_name = models.CharField(max_length=25, name="sname")

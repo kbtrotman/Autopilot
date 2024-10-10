@@ -27,7 +27,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - /var/lib/pgsql/data:/var/lib/postgresql/data
+      - /Users/Cindy/pgsql/data:/var/lib/postgresql/data
 
   proxy:
     image: traefik:v3.1

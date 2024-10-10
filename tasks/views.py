@@ -6,10 +6,10 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from .models import TaskModel
 from .serializers import TaskSerializer
-from apiClient import importNewAPIDef
+from .apiClient import importNewAPIDef
 
 class TaskViewSet(ModelViewSet):
-    queryset = Task.objects.all()
+    queryset = TaskModel.objects.all()
     serializer_class = TaskSerializer
 
     @action(detail=False, methods=['post'], url_path='api_upload', url_name='api_upload')

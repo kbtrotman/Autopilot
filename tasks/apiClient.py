@@ -42,11 +42,9 @@ def update_api_endpoints(client, product_name, description, file_path):
             print(f"Processed {method.upper()} {path} as task '{operation_name}'")
 
 
-
 def create_single_swagger_client(api_entry):
     # Initialize and return a single Swagger client
     return SwaggerClient.from_url(api_entry.openapi_path)
-
 
 
 # Function to load API definitions from an external JSON file (web link or local)
