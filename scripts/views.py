@@ -4,8 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from .models import TaskModel
-from .serializers import TaskSerializer
+from .models import ScriptModel
+from .serializers import ScriptSerializer
+from .scriptClient import updateScriptEntries
 
 class ScriptViewSet(ModelViewSet):
     queryset = ScriptModel.objects.all()
@@ -22,6 +23,7 @@ class ScriptViewSet(ModelViewSet):
         filename = uploaded_file.name
 
         # Define the custom path
+        os_path = os.path.join(settings.BASE_DIR, 'static', 'scripts', 'bin')
         save_path = os.path.join(settings.BASE_DIR, 'static', 'scripts', 'bin', filename)
 
         # Ensure the directory exists
@@ -32,7 +34,8 @@ class ScriptViewSet(ModelViewSet):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
 
-        # Import the new file (which should be standard YAML)
+        # Import the new script
+        updateScriptEntries(save_path, os_path, filename)
 
         # Return a success response with the file URL
         file_url = f'/static/tasks/defs/{filename}'

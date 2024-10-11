@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'scripts',
     'triggers',
     'schedules',
+    'functions',
+    'workflows',
     #Django Requirements
     'mptt',
     'filer',
@@ -62,7 +64,7 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "allauth.usersessions",
     'rest_framework',
-
+    
     # Optional -- requires install using `django-allauth[socialaccount]`.
     # Enterprises shouldn;t use social providers, but if you have a burning
     # need, then uncomment this line and the  appropriate privider(s) below.

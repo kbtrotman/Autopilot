@@ -31,7 +31,7 @@ const columns = [
     editable: true,
   },
   {
-    field: 'product',
+    field: 'type',
     headerName: 'Product Type',
     sortable: true,
     width: 50,
@@ -56,7 +56,7 @@ const columns = [
   },
   {
     field: 'send',
-    headerName: 'Product Type',
+    headerName: 'Notify of Use?',
     type: 'boolean',
     sortable: true,
     width: 50,
@@ -69,7 +69,7 @@ const columns = [
   },
 ];
 
-
+  
 function callRestApi(endpoint, method = 'GET', body) {
   // Retrieve the session token from sessionStorage
   const sessionToken = window.sessionStorage.getItem('sessionToken');
@@ -99,82 +99,100 @@ function callRestApi(endpoint, method = 'GET', body) {
 
 
 export default class Tasks extends React.Component {
-
-  constructor(props){
-      super(props)
-      this.state = {
-          loading:false,
-          _tasks:[]
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      _tasks: [],
+      selectedFile: null // File state for file selection
+    };
   }
 
-  componentDidMount(){
-    //CALL RESTful API
-    callRestApi("tasks/",'GET',null).then( res => {
-        this.setState({
-            loading:true,
-            _tasks: res.data
-        })
+  componentDidMount() {
+    // CALL RESTful API
+    callRestApi("tasks/", 'GET', null).then((res) => {
+      this.setState({
+        loading: true,
+        _tasks: res.data
+      });
     });
   }
 
+  // Function to handle file selection
+  handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      this.setState({ selectedFile: file }, () => {
+        // Call the file upload function right after setting the file state
+        this.handleFileUpload();
+      });
+    }
+  };
+
+  // Function to handle file upload
+  handleFileUpload = async () => {
+    const { selectedFile } = this.state;
+
+    if (!selectedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const response = await axios.post('http://backend:8000/api/tasks/api_upload/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('File uploaded successfully', response.data);
+      // Clear the selected file after successful upload
+      this.setState({ selectedFile: null });
+    } catch (error) {
+      console.error('Error uploading file', error);
+    }
+  };
 
   render() {
+    const { loading, _tasks } = this.state;
 
-    const {loading, _tasks} = this.state;
-
-    if(!loading){
-        return (
-                <h4>Loading...</h4>
-        )
+    if (!loading) {
+      return <h4>Loading...</h4>;
     }
 
     return (
       <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-
-        <Typography color="blue" component="h2" variant="h6" sx={{ mb: 2 }}>
+          <Typography color="blue" component="h2" variant="h6" sx={{ mb: 2 }}>
             Tasks
           </Typography>
 
-
-          <ButtonGroup
-            disableElevation
-            variant="contained"
-            color='inherit'
-            size='small'
-          >
-
-
+          <ButtonGroup disableElevation variant="contained" color="inherit" size="small">
             <input
               accept=".yaml"
               style={{ display: 'none' }}
               id="raised-button-file"
-              multiple
               type="file"
-              />
-                <label htmlFor="raised-button-file">
-                <Button variant="raised" component="span">
-                  New API
-                </Button>
-                </label>
-
+              onChange={this.handleFileChange} // File selection event
+            />
+            <label htmlFor="raised-button-file">
+              <Button variant="contained" component="span">
+                New API
+              </Button>
+            </label>
             <Button>Edit Selected</Button>
           </ButtonGroup>
-
-        </ Box>
+        </Box>
 
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-        {/* cards */}
-
+          {/* DataGrid and other elements */}
           <DataGrid
             autoHeight
             checkboxSelection
-            container spacing={2} 
             columns={columns}
             rows={_tasks}
-            resizablecolumns={true}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             }
@@ -182,25 +200,13 @@ export default class Tasks extends React.Component {
               pagination: { paginationModel: { pageSize: 20 } },
             }}
             pageSizeOptions={[10, 20, 50]}
-            disableColumnResize
             density="compact"
             slotProps={{
               filterPanel: {
                 filterFormProps: {
-                  logicOperatorInputProps: {
-                    variant: 'outlined',
-                    size: 'small',
-                  },
-                  columnInputProps: {
-                    variant: 'outlined',
-                    size: 'small',
-                    sx: { mt: 'auto' },
-                  },
-                  operatorInputProps: {
-                    variant: 'outlined',
-                    size: 'small',
-                    sx: { mt: 'auto' },
-                  },
+                  logicOperatorInputProps: { variant: 'outlined', size: 'small' },
+                  columnInputProps: { variant: 'outlined', size: 'small', sx: { mt: 'auto' } },
+                  operatorInputProps: { variant: 'outlined', size: 'small', sx: { mt: 'auto' } },
                   valueInputProps: {
                     InputComponentProps: {
                       variant: 'outlined',
@@ -209,8 +215,8 @@ export default class Tasks extends React.Component {
                   },
                 },
               },
-            }} />
-
+            }}
+          />
           <Copyright sx={{ my: 4 }} />
         </Box>
       </Box>

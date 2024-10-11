@@ -1,6 +1,6 @@
 
 import os
-import config
+import scripts.config as config
 
 #   CONSTANTS
 

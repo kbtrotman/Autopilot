@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import { Link } from "react-router-dom";
-import {mainListItems, secondaryListItems, SubListItems} from '../subpages/Menu-Lists';
+import {mainListItems, secondaryListItems, SubListItems, SubListItemsSect2} from '../subpages/Menu-Lists';
 import Collapse from '@mui/material/Collapse';
 
 export default function MenuContent() {
@@ -51,14 +51,14 @@ export default function MenuContent() {
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <ListItemButton onClick={() => handleToggle(`secondary-${index}`)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemText primary={item.text}> </ListItemText>
             </ListItemButton>
 
             {/* Nested Items for Collapsible Menus in Secondary List */}
             {item.nest === 'True' && (
               <Collapse in={open[`secondary-${index}`]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {SubListItems.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
+                  {SubListItemsSect2.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
                     <ListItem key={subIndex} component={Link} to={subItem.target}>
                       <ListItemIcon>{subItem.icon}</ListItemIcon>
                       <ListItemText primary={subItem.text} />

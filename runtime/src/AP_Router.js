@@ -9,6 +9,8 @@ import Tasks from './subpages/Tasks';
 import Scripts from './subpages/Scripts';
 import Users from './subpages/Users';
 import Groups from './subpages/Groups';
+import Function from './subpages/Function';
+import Workflow from './subpages/Workflow';
 // User Authentication Routers Here:
 import Login from './account/Login'
 import RequestLoginCode from './account/RequestLoginCode'
@@ -73,6 +75,14 @@ function createRouter (config) {
         {
           path: "groups/",
           element: <AuthenticatedRoute><Groups /></AuthenticatedRoute>
+        },
+        {
+          path: "functions/",
+          element: <AuthenticatedRoute><Function /></AuthenticatedRoute>
+        },
+        {
+          path: "workflows/",
+          element: <AuthenticatedRoute><Workflow /></AuthenticatedRoute>
         },
         {
           path: '/account/login',

@@ -15,15 +15,16 @@ class TaskViewSet(ModelViewSet):
     @action(detail=False, methods=['post'], url_path='api_upload', url_name='api_upload')
     def api_upload(self, request, *args, **kwargs):
         # Check if a file is included in the request
-        if 'file' not in request.FILES:
+        file = request.FILES.get('file')
+        if not file:
             return Response({'error': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         # Retrieve the file
         uploaded_file = request.FILES['file']
         filename = uploaded_file.name
 
         # Define the custom path
-        save_path = os.path.join(settings.BASE_DIR, 'static', 'tasks', 'defs', filename)
+        save_path = os.path.join(settings.BASE_DIR, 'tasks', 'static', 'tasks', 'defs', filename)
 
         # Ensure the directory exists
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -34,9 +35,9 @@ class TaskViewSet(ModelViewSet):
                 destination.write(chunk)
 
         # Import the new file (which should be standard YAML)
-        importNewAPIDef(save_path)
+        importNewAPIDef(save_path, filename)
 
         # Return a success response with the file URL
-        file_url = f'/static/tasks/defs/{filename}'
+        file_url = f'tasks/static/tasks/defs/{filename}'
         return Response({'status': 'success', 'file_url': file_url}, status=status.HTTP_201_CREATED)
 

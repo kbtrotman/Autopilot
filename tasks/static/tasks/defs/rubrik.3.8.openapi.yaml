@@ -1,0 +1,1415 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "3",
+    "title": "Rubrik REST API",
+    "description": "\nCopyright © 2017-2021 Rubrik Inc. [Legal](#section/Legal)\n\n# Introduction\n\nWelcome to the Rubrik™ REST API documentation.\n\nThe Rubrik REST API provides a RESTful interface for working with Rubrik clusters and Rubrik Edge virtual appliances. The Rubrik REST API can be used to query, configure, and control nearly all of the operations of the Rubrik software.\n\nThrough authenticated and encrypted interaction with the Rubrik REST API server, perform any of the operations that are available through the Rubrik web UI and many bulk-type operations that might otherwise be difficult or impossible to perform.\n\nThis documentation provides reference information and examples of typical workflows for the Rubrik REST API. For more detailed information about working with Rubrik clusters and Rubrik Edge virtual appliances refer to the *Rubrik User Guide*.\n\nA quick way to become familiar with the Rubrik REST API, is to use the Rubrik REST API Explorer. [OpenAPI](#section/OpenAPI) describes this tool.\n\nRefer to the [changelog](#section/Changelog) to see information about changes within this version of the Rubrik REST API.\n\n# Changelog\n\nRevisions are listed with the most recent revision first.\n\n## Changes to V3 API in Rubrik Version 8.0.0\n### Feature additions/improvements\n * Added new field `frequencies` to `ArchivalSpec` to specify the snapshots to\n   be archived based on the frequencies at which the snapshots are taken.\n * Added new field `cloudStorageTiers` to `BaseSnapshotSummary`, this field will\n   have only those archival location entries where `cloudStorageTier` is\n   applicable.\n\n## Changes to V3 API in Rubrik Version 7.0.0\n### Feature additions/improvements\n* Added `OracleDatabase` and `Mssql` as two new keys in\n  `LogConfigMap` for storing Oracle and MSSQL log SLA\n   configuration in the SLA definition.\n\n## Changes to V3 API in Rubrik Version 6.0.0\n### New features and improvements\n* Added new field `primaryClusterSlaVersion` and an optional field\n  `replicationTargetSlaVersion` in `SlaDomainSummaryV2` to return sla version\n  of primary cluster and replication target in\n  get, list, create and edit sla rest api responses.\n* Added new optional parameter `should_apply_to_non_policy_snapshots`\n  in `PATCH /sla_domain/{id}`.\n\n## Changes to V3 API in Rubrik Version 5.2.0\n### Deprecation\n### New features and improvements\n \n\n# OpenAPI\nThe Rubrik REST API specification conforms to the OpenAPI 2.0 Specification. Tools that work with the OpenAPI 2.0 Specification can be used with the Rubrik REST API specification.\n\nDevelopment releases (pre-1.0) of the Rubrik REST API specification made reference to 'swagger'. The previous release of the OpenAPI 2.0 Specification was named the Swagger 1.2 Specification.\n\nDownload the Rubrik REST API specification for your tools. [Download](./api-docs)\n\n## Rubrik REST API Explorer\nThe Rubrik REST API Explorer is a browser-based API client hosted by the Rubrik cluster. The Explorer has the Rubrik REST API specification built in. You can use the Explorer to try out Rubrik REST API calls and view the responses.\n\n**IMPORTANT:** The Explorer interacts with the Rubrik cluster through the API calls you make. Use care when making calls that modify or delete configurations and data.\n\nTo access the Rubrik REST API Explorer, click: [Rubrik REST API Explorer](./playground/)\n\n# SLA Domains\n\nRubrik clusters provide automated data management and protection through SLA Domains.\nAn SLA Domain defines the data management and protection policies for their assigned snappables (virtual machines, file systems, and applications).\n\nTo provide policy based management and protection of a snappable, add the snappable to an SLA Domain, or to multiple SLA Domains.\n## Patching SLA Domains\n\nTo patch the attributes of an SLA domain, send a PATCH request to\n[`/sla_domain/{id}`](#operation/patchSlaDomainV3). Include in the request body\nonly the attributes that needs to be patched.\n\n**Example:** Patching the daily backup SLA Domain\n\nPatch the SLA Domain that was created in [Creating SLA Domains](#section/SLA-Domains/Creating-SLA-Domains) to change the archival specifications.\n\n```bash\ncurl -X PATCH \\\n  -d '{\n  \"archivalSpecs\": [\n    {\n        \"locationId\": \"some-valid-archived-location-id\",\n        \"archivalThreshold\": 14\n    }\n  ]}' \\\n  \"https://$cluster_address/api/v3/sla_domain/$sla_id\"\n```\nThe response confirms the new attribute and also includes the other\nattributes that were not changed.\n\n```bash\n{\n  \"patchedSlaDomainSummary\" : [\n    {\n      id\": \"$sla_id\",\n      \"name\": \"Daily SLA\",\n      \"primaryClusterSlaVersion\": 2,\n      \"frequencies\": [\n        \"daily\": {\n          \"frequency\": 1,\n          \"retention\": 7\n        }\n      ],\n      \"archivalSpecs\": [\n        {\n         \"locationId\": \"some-valid-archived-location-id\",\n         \"archivalThreshold\": 14\n        }\n      ],\n      \"allowedBackupWindows\": [],\n      \"firstFullAllowedBackupWindows\": []\n    }\n  ],\n  \"batchAsyncRequestStatus\" : [\n    {\n      \"responses\": [\n        {\n          \"id\": \"string\",\n          \"status\": \"string\",\n          \"progress\": 0,\n          \"startTime\": \"2019-10-29T22:11:35.256Z\",\n          \"endTime\": \"2019-10-29T22:11:35.256Z\",\n          \"nodeId\": \"string\",\n          \"error\": {\n            \"message\": \"string\"\n          },\n          \"links\": [\n            {\n              \"href\": \"string\",\n              \"rel\": \"string\"\n            }\n          ]\n        }\n      ]\n    }\n   ]\n}\n```\n\nThe Rubrik REST API server responds with HTTP response code 200 and the\nresponse body containing the details of the async request.\n\n# Legal\n\n## Copyright\n\nRubrik REST API - Copyright © 2017-2021 Rubrik Inc.\nAll rights reserved.\n\nThis documentation may be used free of charge. Selling without prior written consent is prohibited.\nObtain permission before redistributing. In all cases, this copyright notice and disclaimer must remain\nintact.\n\n\n## Disclaimer\n\nTHE CONTENTS OF THIS DOCUMENTATION ARE PROVIDED \"AS IS,\" AND COPYRIGHT HOLDERS MAKE NO\nREPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nWARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR\nTITLE; THAT THE CONTENTS OF THE DOCUMENTATION ARE SUITABLE FOR ANY PURPOSE; THAT THE\nIMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS,\nTRADEMARKS OR OTHER RIGHTS.\nCOPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL\nDAMAGES ARISING OUT OF ANY USE OF THE DOCUMENTATION OR THE PERFORMANCE OR IMPLEMENTATION OF\nTHE CONTENTS THEREOF.\n\n## Trademarks\n\nRubrik, the Rubrik logo, Rubrik Envision, and Rubrik Edge are trademarks or registered trademarks of Rubrik, Inc. in the U.S. and/or other countries. All other trademarks are the property of their respective owners.\n",
+    "x-logo": {
+      "url": "./rubrik_logo.svg"
+    }
+  },
+  "basePath": "/api/v3",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/sla_domain/{id}": {
+      "patch": {
+        "tags": [
+          "/sla_domain"
+        ],
+        "summary": "Update SLA Domain",
+        "description": "Update the properties of an SLA Domain.",
+        "operationId": "patchSlaDomainV3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the SLA Domain.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "patch_info",
+            "description": "Object containing the fields to edit for SLA Domain. The SLA Domain accepts two backup windows, one for a regular backup or snapshot and one for the first full backup or snapshot. Specify times using the Rubrik cluster timezone. Remote SLA Domains only support edits to the archival specification.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SlaDomainPatchDefinitionV2"
+            }
+          },
+          {
+            "name": "should_apply_to_non_policy_snapshots",
+            "in": "query",
+            "description": "Determines if the new configuration value keeps existing, non-policy snapshots of data sources retained by this SLA Domain. The value is 'false' by default. This configuration value takes effect only if 'should_apply_to_existing_snapshots' is set to true.",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "should_apply_to_existing_snapshots",
+            "in": "query",
+            "description": "Determines whether the new configuration retains existing snapshots of data sources that are currently retained by this SLA Domain.",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Object containing updated SLA Domain along with queued asynchronous requests for assigning the patched SLA domain to affected objects.",
+            "schema": {
+              "$ref": "#/definitions/SlaDomainUpdateSummary"
+            }
+          }
+        },
+        "x-group": "sla_domain_v3"
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "responses": {
+    "RequestFailedException": {
+      "description": "Request failed.",
+      "schema": {
+        "$ref": "#/definitions/RequestFailedException"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    },
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "BasicAuth": []
+    },
+    {
+      "Bearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Endpoint reference",
+      "x-traitTag": true
+    },
+    {
+      "name": "/sla_domain",
+      "x-displayName": "/sla_domain",
+      "description": "SLA Domains."
+    }
+  ],
+  "definitions": {
+    "NutanixVmSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numNutanixVms": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of Nutanix virtual machines protected under this SLA domain."
+        }
+      }
+    },
+    "CloudStorageColdTier": {
+      "type": "string",
+      "description": "The set of storage classes that support Cold tiering during smart or instant tiering.\n",
+      "enum": [
+        "AzureArchive",
+        "Glacier",
+        "GlacierDeepArchive"
+      ]
+    },
+    "CloudStorageRehydrationSpeed": {
+      "type": "string",
+      "description": "Specifies the retrieval speed option when retrieving data from the cold storage tier to the hot storage tier for restore purposes. Rubrik cannot directly restore data from the cold storage tier and the data must be first retrieved into the hot storage tier. This is applicable only for AWS S3 and Azure archival locations. For AWS, three speed options are supported -- AwsExpedited, AwsStandard, and AwsBulk. AwsBulk is the cheapest and slowest. AwsExpedited is the fastest and most expensive. AwsStandard is the recommended default value. For Azure, the options are AzureStandard and AzureHighPriority. AzureHighPriority is more expensive and faster than AzureStandard.  The default value is AzureStandard.\n",
+      "enum": [
+        "AwsBulk",
+        "AwsStandard",
+        "AwsExpedited",
+        "AzureStandard",
+        "AzureHighPriority"
+      ]
+    },
+    "AwsEc2InstanceSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numEc2Instances": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of EC2 instances protected under this SLA Domain."
+        }
+      }
+    },
+    "HypervVmSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numHypervVms": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of Hyper-V virtual machines protected under this SLA domain."
+        }
+      }
+    },
+    "Link": {
+      "type": "object",
+      "required": [
+        "href",
+        "rel"
+      ],
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The destination of the link."
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relation of the destination of this link to the current resource."
+        }
+      }
+    },
+    "ManagedVolumeSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numManagedVolumes": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of Managed volumes protected under this SLA Domain."
+        }
+      }
+    },
+    "MssqlDbSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numDbs": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of actively protected databases under this SLA domain."
+        }
+      }
+    },
+    "AdvancedUiConfigAttributes": {
+      "type": "object",
+      "required": [
+        "retentionType",
+        "timeUnit"
+      ],
+      "properties": {
+        "timeUnit": {
+          "description": "Units of frequency. Accepted values are Minute, Hourly, Daily, Weekly, Monthly, Quarterly, and Yearly.",
+          "$ref": "#/definitions/SlaTimeUnit"
+        },
+        "retentionType": {
+          "description": "Units of retention. Accepted values are Minute, Hourly, Daily, Weekly, Monthly, Quarterly, and Yearly.",
+          "$ref": "#/definitions/SlaTimeUnit"
+        }
+      }
+    },
+    "ArchivalSpecV2": {
+      "type": "object",
+      "required": [
+        "archivalThreshold"
+      ],
+      "properties": {
+        "locationId": {
+          "type": "string"
+        },
+        "locationName": {
+          "type": "string"
+        },
+        "polarisManagedId": {
+          "type": "string",
+          "description": "The Polaris managed ID of an archival location. At least one of the parameters locationId and polarisManagedId must be defined to correctly refer to an archival location.\n"
+        },
+        "archivalThreshold": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Amount of time, in seconds, after which the snapshot must be uploaded."
+        },
+        "frequencies": {
+          "type": "array",
+          "description": "Frequencies for identifying snapshots to be archived. If frequencies are not specified, snapshots taken at all frequencies are archived as per the SLA Domain configuration.\n",
+          "items": {
+            "$ref": "#/definitions/SlaTimeUnit"
+          }
+        },
+        "archivalTieringSpec": {
+          "description": "Enables Instant Tiering or Smart Tiering for snapshots that were uploaded to the specified archival location.\n",
+          "$ref": "#/definitions/ArchivalTieringSpec"
+        },
+        "isPassthroughSupported": {
+          "type": "boolean",
+          "description": "Boolean value that indicates if the archival location type supports direct archive backups.\n"
+        }
+      }
+    },
+    "ArchivalTieringSpec": {
+      "type": "object",
+      "required": [
+        "isInstantTieringEnabled"
+      ],
+      "properties": {
+        "isInstantTieringEnabled": {
+          "type": "boolean",
+          "description": "A Boolean value that determines whether to immediately tier uploaded snapshots to cold storage. When this value is 'true,' uploaded snapshots are immediately tiered to cold storage. When this value is 'false,' snapshots are marked as eligible for tiering to cold storage after their time on the archival location exceeds the configured minimum accessible duration.\n"
+        },
+        "minAccessibleDurationInSeconds": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Specifies an interval in seconds. Uploaded snapshots are accessible for instant recovery for the duration of the specified interval. This value is ignored when Instant Tiering is enabled.\n"
+        },
+        "coldStorageClass": {
+          "description": "The specific class of cloud storage used by Cold tiering. For Azure storage, the only supported class is Azure Archive. For AWS, specify Glacier or Glacier Deep Archive. By default, the classes are Azure Archive and Glacier for Azure and AWS respectively.\n",
+          "$ref": "#/definitions/CloudStorageColdTier"
+        },
+        "shouldTierExistingSnapshots": {
+          "type": "boolean",
+          "description": "Indicates if existing snapshots for all objects protected by the SLA should be tiered. If not specified, this defaults to false. Only the snapshots that exist in the archival location associated with the SLA will be tiered.\n"
+        }
+      }
+    },
+    "BackupWindow": {
+      "type": "object",
+      "required": [
+        "durationInHours",
+        "startTimeAttributes"
+      ],
+      "properties": {
+        "startTimeAttributes": {
+          "$ref": "#/definitions/SlaStartTimeAttributes"
+        },
+        "durationInHours": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "BulkSlaDomainAssignmentInfo": {
+      "type": "object",
+      "required": [
+        "assignmentInfos"
+      ],
+      "properties": {
+        "assignmentInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PerSlaDomainAssignmentInfo"
+          }
+        }
+      }
+    },
+    "ConfiguredSlaType": {
+      "type": "string",
+      "description": "Specifies whether the SLA Domain is used for protection or retention.",
+      "enum": [
+        "ProtectionSla",
+        "RetentionSla"
+      ]
+    },
+    "Db2DeltaFrequency": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "timeUnit"
+      ],
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Frequency value for delta backup of Db2 databases."
+        },
+        "timeUnit": {
+          "description": "Units for delta backup frequency. Accepted values are Minutely, Hourly and Daily.",
+          "$ref": "#/definitions/Db2DeltaFrequencyType"
+        }
+      }
+    },
+    "Db2DeltaFrequencyType": {
+      "type": "string",
+      "description": "Units for delta backup frequency.",
+      "enum": [
+        "Minutely",
+        "Hourly",
+        "Daily"
+      ]
+    },
+    "Db2IncrementalFrequency": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "timeUnit"
+      ],
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Frequency value for incremental backup of Db2 databases."
+        },
+        "timeUnit": {
+          "description": "Units for incremental backup frequency. Accepted values are Minutely, Hourly and Daily.",
+          "$ref": "#/definitions/Db2IncrementalFrequencyType"
+        }
+      }
+    },
+    "Db2IncrementalFrequencyType": {
+      "type": "string",
+      "description": "Units for incremental backup frequency.",
+      "enum": [
+        "Minutely",
+        "Hourly",
+        "Daily"
+      ]
+    },
+    "DeltaFrequencyMap": {
+      "type": "object",
+      "properties": {
+        "Db2Database": {
+          "description": "Delta backup frequency configuration for DB2 databases. Delta backup for Db2 databases includes all changes since the last full, incremental, or delta backup.",
+          "$ref": "#/definitions/Db2DeltaFrequency"
+        }
+      }
+    },
+    "DifferentialFrequencyMap": {
+      "type": "object",
+      "properties": {
+        "SapHanaDatabase": {
+          "description": "Differential backup frequency configuration for SAP HANA databases. Differential backup for SAP HANA includes all the data changed since the last full data backup.",
+          "$ref": "#/definitions/SapHanaDifferentialFrequency"
+        }
+      }
+    },
+    "EffectiveSlaHolder": {
+      "type": "object",
+      "required": [
+        "effectiveSlaDomainId",
+        "effectiveSlaDomainName"
+      ],
+      "properties": {
+        "effectiveSlaDomainId": {
+          "type": "string",
+          "description": "The ID of the SLA Domain that controls the protection of the Rubrik object."
+        },
+        "effectiveSlaDomainName": {
+          "type": "string",
+          "description": "The name of the SLA Domain that controls the protection of the Rubrik object."
+        },
+        "isEffectiveSlaDomainRetentionLocked": {
+          "type": "boolean",
+          "description": "Indicates whether the effective SLA Domain is Retention Locked. When this value is 'true', the effective SLA domain is a Retention Lock SLA Domain."
+        },
+        "effectiveSlaDomainPolarisManagedId": {
+          "type": "string",
+          "description": "Optional. This field contains the managed ID of of the Polaris-managed effective SLA Domain."
+        },
+        "effectiveSlaSourceObjectId": {
+          "type": "string",
+          "description": "The ID of the parent of the Rubrik object from which the SLA Domain that controls the protection of Rubrik object is inherited."
+        },
+        "effectiveSlaSourceObjectName": {
+          "type": "string",
+          "description": "The name of the parent of the Rubrik object from which the SLA Domain that controls the protection of Rubrik object is inherited."
+        }
+      }
+    },
+    "ExistingSnapshotRetention": {
+      "type": "string",
+      "description": "Specifies the retention policy to apply to existing snapshots when unprotecting an object.",
+      "enum": [
+        "RetainSnapshots",
+        "KeepForever",
+        "ExpireImmediately"
+      ]
+    },
+    "FrequencyConfig": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "retention"
+      ],
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "retention": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "IncrementalFrequencyMap": {
+      "type": "object",
+      "properties": {
+        "SapHanaDatabase": {
+          "description": "Incremental backup frequency configuration for SAP HANA databases. Incremental backup for SAP HANA includes the data changed since the last backup.",
+          "$ref": "#/definitions/SapHanaIncrementalFrequency"
+        },
+        "Db2Database": {
+          "description": "Incremental backup frequency configuration for Db2 databases. Incremental backup for Db2 includes all the data changed since the last full data backup.",
+          "$ref": "#/definitions/Db2IncrementalFrequency"
+        }
+      }
+    },
+    "LogConfigMap": {
+      "type": "object",
+      "properties": {
+        "SapHanaDatabase": {
+          "description": "Log backup configuration for SAP HANA databases. This defines the retention period for logs of SAP HANA databases.",
+          "$ref": "#/definitions/SlaLogConfiguration"
+        },
+        "VmwareVirtualMachine": {
+          "description": "Log backup configuration for continuous data protection of VMware virtual machines.",
+          "$ref": "#/definitions/SlaLogConfiguration"
+        },
+        "OracleDatabase": {
+          "description": "Log backup configuration for Oracle databases, hosts, and RACs.",
+          "$ref": "#/definitions/OracleSlaLogConfiguration"
+        },
+        "Mssql": {
+          "description": "Log backup configuration for MSSQL databases, instances, and availability groups.",
+          "$ref": "#/definitions/SlaLogConfiguration"
+        },
+        "Db2Database": {
+          "description": "Log backup configuration for Db2 databases. This defines the retention period for logs of Db2 databases.",
+          "$ref": "#/definitions/SlaLogConfiguration"
+        }
+      }
+    },
+    "LogFrequencyType": {
+      "type": "string",
+      "description": "Defines the frequency of taking log backups.",
+      "enum": [
+        "Continuous",
+        "Minute"
+      ]
+    },
+    "ManagedObjectPendingSlaInfo": {
+      "type": "object",
+      "required": [
+        "objectId",
+        "pendingSlaDomainId",
+        "pendingSlaDomainName"
+      ],
+      "properties": {
+        "objectId": {
+          "type": "string",
+          "description": "Managed ID of the object."
+        },
+        "pendingSlaDomainId": {
+          "type": "string"
+        },
+        "pendingSlaDomainName": {
+          "type": "string"
+        },
+        "isPendingSlaDomainRetentionLocked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "MissedSnapshotDayOfTimeUnit": {
+      "type": "string",
+      "description": "Units for missed snapshot dayOfTime.",
+      "enum": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+        "FirstDay",
+        "Fifteenth",
+        "LastDay"
+      ]
+    },
+    "MonthlyConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        {
+          "type": "object",
+          "required": [
+            "dayOfMonth"
+          ],
+          "properties": {
+            "dayOfMonth": {
+              "$ref": "#/definitions/SlaDayOfMonth"
+            }
+          }
+        }
+      ]
+    },
+    "OracleSlaLogConfiguration": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SlaLogConfiguration"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hostLogRetentionInMinutes": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Specifies an interval in minutes, which governs the retention of redo logs. The next log snapshot job deletes archived Oracle redo log files whose 'nextTime' field specifies a time that occurs before the current time minus the specifed number of minutes. To immediately delete archived redo log files regardless of age, specify an interval of -1. To preserve all archived redo log files, specify an interval of -2."
+            }
+          }
+        }
+      ]
+    },
+    "PerSlaDomainAssignmentInfo": {
+      "type": "object",
+      "required": [
+        "assignmentInfo",
+        "slaDomainId"
+      ],
+      "properties": {
+        "slaDomainId": {
+          "type": "string"
+        },
+        "assignmentInfo": {
+          "$ref": "#/definitions/SlaDomainAssignmentInfo"
+        }
+      }
+    },
+    "QuarterlyConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        {
+          "type": "object",
+          "required": [
+            "dayOfQuarter",
+            "firstQuarterStartMonth"
+          ],
+          "properties": {
+            "firstQuarterStartMonth": {
+              "$ref": "#/definitions/SlaMonth"
+            },
+            "dayOfQuarter": {
+              "$ref": "#/definitions/SlaDayOfQuarter"
+            }
+          }
+        }
+      ]
+    },
+    "ReplicationSpecV2": {
+      "type": "object",
+      "required": [
+        "retentionLimit"
+      ],
+      "properties": {
+        "locationId": {
+          "type": "string"
+        },
+        "locationName": {
+          "type": "string"
+        },
+        "polarisManagedId": {
+          "type": "string",
+          "description": "This refers to the Polaris managed ID of an archival location. At least one of the params locationId and polarisManagedId should be defined to correctly refer to an archival location. If locationId is provided, then polarisManagedId will be ignored.\n"
+        },
+        "retentionLimit": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Specifies a time duration in seconds. Snapshots will be retained on the replication target location until the duration has passed.\n"
+        },
+        "logRetentionLimit": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Specifies an interval in seconds. Logs are retained at the replication location until the specified interval expires."
+        },
+        "replicationType": {
+          "description": "This refers to the type of replication that will be used for the SLA Domain. Default value is \"REPLICATION_TO_CLUSTER\".",
+          "$ref": "#/definitions/ReplicationType"
+        }
+      }
+    },
+    "ReplicationType": {
+      "type": "string",
+      "description": "The type of replication for an SLA Domain.",
+      "enum": [
+        "REPLICATION_TO_CLUSTER",
+        "REPLICATION_TO_CLOUD_LOCATION"
+      ]
+    },
+    "SapHanaDifferentialFrequency": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "timeUnit"
+      ],
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Frequency value for differential backup of SAP HANA databases."
+        },
+        "timeUnit": {
+          "description": "Units for differential backup frequency. Accepted values are Hourly and Daily.",
+          "$ref": "#/definitions/SapHanaDifferentialFrequencyType"
+        }
+      }
+    },
+    "SapHanaDifferentialFrequencyType": {
+      "type": "string",
+      "description": "Units for differential backup frequency.",
+      "enum": [
+        "Minutely",
+        "Hourly",
+        "Daily"
+      ]
+    },
+    "SapHanaIncrementalFrequency": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "timeUnit"
+      ],
+      "properties": {
+        "frequency": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Frequency value for incremental backup of SAP HANA databases."
+        },
+        "timeUnit": {
+          "description": "Units for incremental backup frequency. Accepted values are Hourly and Daily.",
+          "$ref": "#/definitions/SapHanaIncrementalFrequencyType"
+        }
+      }
+    },
+    "SapHanaIncrementalFrequencyType": {
+      "type": "string",
+      "description": "Units for incremental backup frequency.",
+      "enum": [
+        "Minutely",
+        "Hourly",
+        "Daily"
+      ]
+    },
+    "SlaAssignable": {
+      "type": "object",
+      "required": [
+        "configuredSlaDomainId",
+        "configuredSlaDomainName",
+        "id",
+        "name",
+        "primaryClusterId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the Rubrik object."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the Rubrik object."
+        },
+        "configuredSlaDomainId": {
+          "type": "string",
+          "description": "The ID of the SLA Domain configured directly on the Rubrik object."
+        },
+        "configuredSlaDomainName": {
+          "type": "string",
+          "description": "The name of the SLA Domain configured directly on the Rubrik object."
+        },
+        "configuredSlaDomainType": {
+          "description": "Specifies whether the SLA Domain is used for protection or retention.",
+          "$ref": "#/definitions/ConfiguredSlaType"
+        },
+        "primaryClusterId": {
+          "type": "string",
+          "description": "The ID of the cluster that manages the Rubrik object."
+        },
+        "isConfiguredSlaDomainRetentionLocked": {
+          "type": "boolean",
+          "description": "Indicates whether the configured SLA Domain is Retention Locked. When this value is 'true', the configured SLA Domain is a Retention Lock SLA Domain."
+        },
+        "slaLastUpdateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The UTC time when the SLA Domain was last updated."
+        }
+      }
+    },
+    "SlaDayOfMonth": {
+      "type": "string",
+      "description": "The day of the month when snapshot will be taken.",
+      "enum": [
+        "FirstDay",
+        "Fifteenth",
+        "LastDay"
+      ]
+    },
+    "SlaDayOfQuarter": {
+      "type": "string",
+      "description": "The day of the quarter when snapshot will be taken.",
+      "enum": [
+        "FirstDay",
+        "LastDay"
+      ]
+    },
+    "SlaDayOfWeek": {
+      "type": "string",
+      "description": "The day of the week when snapshot will be taken.",
+      "enum": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ]
+    },
+    "SlaDayOfYear": {
+      "type": "string",
+      "description": "The day of the year when snapshot will be taken.",
+      "enum": [
+        "FirstDay",
+        "LastDay"
+      ]
+    },
+    "SlaDomainAssignmentInfo": {
+      "type": "object",
+      "required": [
+        "managedIds"
+      ],
+      "properties": {
+        "managedIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "existingSnapshotRetention": {
+          "description": "The retention strategy used for existing snapshots of objects that become unprotected. When an SLA Domain assignment is cleared from an object, the retention strategy described in this field is used only when the object cannot inherit a protection SLA Domain from an ancestor object and becomes an unprotected object.",
+          "$ref": "#/definitions/ExistingSnapshotRetention"
+        },
+        "shouldApplyToExistingSnapshots": {
+          "type": "boolean",
+          "description": "A Boolean that specifies whether to retain existing snapshots of assigned objects with the configuration of a specified SLA Domain. The default value is 'true'. If objects are unprotected, the retention of existing snapshots will be determined by the value of parameter 'existingSnapshotRetention'. This field should be kept empty in such cases. When an SLA Domain assignment is cleared from an object, the retention strategy described in this field is used only when the object can inherit a protection SLA Domain from an ancestor object."
+        },
+        "shouldApplyToNonPolicySnapshots": {
+          "type": "boolean",
+          "description": "A Boolean which if set to true specifies that the retention changes corresponding to the new SLA should be  applied to non-policy snapshots in addition to existing policy based snapshots."
+        }
+      }
+    },
+    "SlaDomainPatchDefinitionV2": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "frequencies": {
+          "$ref": "#/definitions/SlaFrequencyV2"
+        },
+        "logConfig": {
+          "$ref": "#/definitions/SlaLogConfig"
+        },
+        "allowedBackupWindows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BackupWindow"
+          }
+        },
+        "firstFullAllowedBackupWindows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BackupWindow"
+          }
+        },
+        "localRetentionLimit": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "archivalSpecs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArchivalSpecV2"
+          }
+        },
+        "replicationSpecs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReplicationSpecV2"
+          }
+        },
+        "showAdvancedUi": {
+          "type": "boolean"
+        },
+        "advancedUiConfig": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdvancedUiConfigAttributes"
+          }
+        },
+        "isRetentionLocked": {
+          "type": "boolean",
+          "description": "Boolean value that identifies a Retention Lock SLA Domain. Value is true when an SLA Domain is Retention Locked and false when it is not."
+        },
+        "incrementalFrequency": {
+          "description": "Incremental backup frequency for SAP HANA, Db2 databases.",
+          "$ref": "#/definitions/IncrementalFrequencyMap"
+        },
+        "differentialFrequency": {
+          "description": "Differential backup frequency for SAP HANA databases.",
+          "$ref": "#/definitions/DifferentialFrequencyMap"
+        },
+        "deltaFrequency": {
+          "description": "Delta backup frequency for Db2 databases.",
+          "$ref": "#/definitions/DeltaFrequencyMap"
+        },
+        "logConfigs": {
+          "description": "Log backup configuration for VMware virtual machines, SAP HANA, and Db2 databases.",
+          "$ref": "#/definitions/LogConfigMap"
+        }
+      }
+    },
+    "SlaDomainSummaryV2": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SlaObjectCounts"
+        },
+        {
+          "type": "object",
+          "required": [
+            "advancedUiConfig",
+            "allowedBackupWindows",
+            "firstFullAllowedBackupWindows",
+            "frequencies",
+            "id",
+            "isDefault",
+            "maxLocalRetentionLimit",
+            "name",
+            "primaryClusterId",
+            "primaryClusterSlaVersion",
+            "showAdvancedUi"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "primaryClusterId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "primaryClusterSlaVersion": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Specifies the version of the SLA that is incremented for every user SLA Domain edit. For remote SLA Domains, this specifies the version of SLA Domain used by the source cluster."
+            },
+            "replicationTargetSlaVersion": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Specifies the version of the remote SLA Domain that is incremented for every user SLA Domain on the replication target."
+            },
+            "polarisManagedId": {
+              "type": "string",
+              "description": "Optional field containing Polaris managed ids of the Polaris managed SLAs. This field will be set only if the SLA is Polaris managed."
+            },
+            "frequencies": {
+              "$ref": "#/definitions/SlaFrequencyV2"
+            },
+            "logConfig": {
+              "$ref": "#/definitions/SlaLogConfig"
+            },
+            "allowedBackupWindows": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BackupWindow"
+              }
+            },
+            "firstFullAllowedBackupWindows": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BackupWindow"
+              }
+            },
+            "localRetentionLimit": {
+              "type": "integer",
+              "format": "int64",
+              "description": "The retention limit for snapshots on the local Rubrik system. When no limit is specified, snapshots are retained up to the limit specified by the SLA."
+            },
+            "maxLocalRetentionLimit": {
+              "type": "integer",
+              "format": "int64",
+              "description": "The maximum retention limit for snapshots on the local Rubrik system. For snapshots operating under a local SLA, this limit is the longest period specified in the SlaFrequencyV2 object. For snapshots under a remote SLA, this limit is the value of the retentionLimit variable set at the replication target location."
+            },
+            "archivalSpecs": {
+              "type": "array",
+              "description": "Specification for archival locations on this SLA.",
+              "items": {
+                "$ref": "#/definitions/ArchivalSpecV2"
+              }
+            },
+            "replicationSpecs": {
+              "type": "array",
+              "description": "Specification for the replication locations on this SLA.",
+              "items": {
+                "$ref": "#/definitions/ReplicationSpecV2"
+              }
+            },
+            "isDefault": {
+              "type": "boolean"
+            },
+            "uiColor": {
+              "type": "string"
+            },
+            "showAdvancedUi": {
+              "type": "boolean"
+            },
+            "advancedUiConfig": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AdvancedUiConfigAttributes"
+              }
+            },
+            "isRetentionLocked": {
+              "type": "boolean",
+              "description": "Boolean value that identifies a Retention Lock SLA Domain. Value is true when an SLA Domain is Retention Locked and false when it is not."
+            },
+            "isPaused": {
+              "type": "boolean",
+              "description": "A Boolean value that specifies whether protection for all the snappables that are protected by the specified SLA Domain is paused. When the value is 'true' protection is paused."
+            },
+            "incrementalFrequency": {
+              "description": "Incremental backup frequency for SAP HANA and Db2 databases.",
+              "$ref": "#/definitions/IncrementalFrequencyMap"
+            },
+            "differentialFrequency": {
+              "description": "Differential backup frequency for SAP HANA databases.",
+              "$ref": "#/definitions/DifferentialFrequencyMap"
+            },
+            "deltaFrequency": {
+              "description": "Delta backup frequency for Db2 databases.",
+              "$ref": "#/definitions/DeltaFrequencyMap"
+            },
+            "logConfigs": {
+              "description": "Log backup configuration for VMware virtual machines, SAP HANA databases, Oracle databases, MSSQL and Db2 databases.",
+              "$ref": "#/definitions/LogConfigMap"
+            }
+          }
+        }
+      ]
+    },
+    "SlaDomainUpdateSummary": {
+      "type": "object",
+      "required": [
+        "patchedSlaDomainSummary"
+      ],
+      "properties": {
+        "patchedSlaDomainSummary": {
+          "description": "Object containing the patched SLA Domain.",
+          "$ref": "#/definitions/SlaDomainSummaryV2"
+        },
+        "batchAsyncRequestStatus": {
+          "description": "Queued asynchronous requests for assigning SLA Domains to snapshots.",
+          "$ref": "#/definitions/BatchAsyncRequestStatus"
+        }
+      }
+    },
+    "SlaFrequencyV2": {
+      "type": "object",
+      "properties": {
+        "minute": {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        "hourly": {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        "daily": {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        "weekly": {
+          "$ref": "#/definitions/WeeklyConfig"
+        },
+        "monthly": {
+          "$ref": "#/definitions/MonthlyConfig"
+        },
+        "quarterly": {
+          "$ref": "#/definitions/QuarterlyConfig"
+        },
+        "yearly": {
+          "$ref": "#/definitions/YearlyConfig"
+        }
+      }
+    },
+    "SlaLogConfig": {
+      "type": "object",
+      "properties": {
+        "slaLogFrequencyConfig": {
+          "$ref": "#/definitions/SlaLogFrequencyConfig"
+        }
+      },
+      "description": "(Deprecated) Log backup configuration for VMware virtual machines only. To track log backup configuration by object type, use **logConfigs** instead."
+    },
+    "SlaLogConfiguration": {
+      "type": "object",
+      "properties": {
+        "slaLogFrequencyConfig": {
+          "$ref": "#/definitions/SlaLogFrequencyConfig"
+        }
+      }
+    },
+    "SlaLogFrequencyConfig": {
+      "type": "object",
+      "required": [
+        "logFrequencyType",
+        "retention"
+      ],
+      "properties": {
+        "retention": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "logFrequencyType": {
+          "$ref": "#/definitions/LogFrequencyType"
+        },
+        "frequency": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SlaMonth": {
+      "type": "string",
+      "description": "The month of the year when snapshot will be taken.",
+      "enum": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "SlaObjectCounts": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NutanixVmSlaObjectCount"
+        },
+        {
+          "$ref": "#/definitions/AwsEc2InstanceSlaObjectCount"
+        },
+        {
+          "$ref": "#/definitions/HypervVmSlaObjectCount"
+        },
+        {
+          "$ref": "#/definitions/ManagedVolumeSlaObjectCount"
+        },
+        {
+          "$ref": "#/definitions/MssqlDbSlaObjectCount"
+        },
+        {
+          "$ref": "#/definitions/VcdVappSlaObjectCount"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "numOracleDbs": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of actively protected oracle databases under this SLA Domain."
+            },
+            "numFilesets": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of filesets protected under this SLA Domain."
+            },
+            "numStorageArrayVolumeGroups": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of storage array volume groups protected under this SLA Domain."
+            },
+            "numWindowsVolumeGroups": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of Windows volume groups protected under this SLA Domain."
+            },
+            "numLinuxHosts": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of Linux servers with filesets protected under this SLA Domain."
+            },
+            "numShares": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of shares protected under this SLA Domain."
+            },
+            "numWindowsHosts": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of Windows servers with filesets protected under this SLA Domain."
+            },
+            "numVms": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "numProtectedObjects": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The total number of protected ojects under this SLA Domain."
+            }
+          }
+        }
+      ]
+    },
+    "SlaStartTimeAttributes": {
+      "type": "object",
+      "required": [
+        "hour",
+        "minutes"
+      ],
+      "properties": {
+        "minutes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hour": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SlaTimeUnit": {
+      "type": "string",
+      "description": "Units for frequency and retention. Accepted values are Minute, Hourly, Daily, Weekly, Monthly, Quarterly, and Yearly.",
+      "enum": [
+        "Minute",
+        "Hourly",
+        "Daily",
+        "Weekly",
+        "Monthly",
+        "Quarterly",
+        "Yearly"
+      ]
+    },
+    "Snappable": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SlaAssignable"
+        },
+        {
+          "$ref": "#/definitions/EffectiveSlaHolder"
+        },
+        {
+          "type": "object",
+          "required": [
+            "slaAssignment"
+          ],
+          "properties": {
+            "slaAssignment": {
+              "type": "string",
+              "description": "The SLA assignment type. Direct SLA assignment means that a SLA Domain was configured directly on the Rubrik object by the user. Derived SLA assignment means that the Rubrik object inherits an SLA Domain from its parent Rubrik object.",
+              "enum": [
+                "Derived",
+                "Direct",
+                "Unassigned"
+              ]
+            },
+            "retentionSlaDomainId": {
+              "type": "string",
+              "description": "The ID of the SLA Domain whose retention policy is in use."
+            }
+          }
+        }
+      ]
+    },
+    "WeeklyConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        {
+          "type": "object",
+          "required": [
+            "dayOfWeek"
+          ],
+          "properties": {
+            "dayOfWeek": {
+              "$ref": "#/definitions/SlaDayOfWeek"
+            }
+          }
+        }
+      ]
+    },
+    "YearlyConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FrequencyConfig"
+        },
+        {
+          "type": "object",
+          "required": [
+            "dayOfYear",
+            "yearStartMonth"
+          ],
+          "properties": {
+            "yearStartMonth": {
+              "$ref": "#/definitions/SlaMonth"
+            },
+            "dayOfYear": {
+              "$ref": "#/definitions/SlaDayOfYear"
+            }
+          }
+        }
+      ]
+    },
+    "AsyncRequestStatus": {
+      "type": "object",
+      "required": [
+        "id",
+        "links",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the request object used to poll the status."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the ID."
+        },
+        "progress": {
+          "type": "number",
+          "format": "double",
+          "description": "The current percentage progress of the asynchronous request."
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The start time of the request."
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The end time of the request."
+        },
+        "nodeId": {
+          "type": "string",
+          "description": "The ID of the node where the job ran."
+        },
+        "error": {
+          "description": "Any errors encountered.",
+          "$ref": "#/definitions/RequestErrorInfo"
+        },
+        "links": {
+          "type": "array",
+          "description": "References to any related objects.",
+          "items": {
+            "$ref": "#/definitions/Link"
+          }
+        }
+      }
+    },
+    "BatchAsyncRequest": {
+      "type": "object",
+      "required": [
+        "ids"
+      ],
+      "properties": {
+        "ids": {
+          "type": "array",
+          "description": "Batch of the request object IDs used to poll the status.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "BatchAsyncRequestStatus": {
+      "type": "object",
+      "required": [
+        "responses"
+      ],
+      "properties": {
+        "responses": {
+          "type": "array",
+          "description": "The asynchronous request status of a batch request.",
+          "items": {
+            "$ref": "#/definitions/AsyncRequestStatus"
+          }
+        }
+      }
+    },
+    "RequestErrorInfo": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The error message for failed IDs."
+        }
+      }
+    },
+    "RequestFailedException": {
+      "type": "object",
+      "required": [
+        "errorType",
+        "message"
+      ],
+      "properties": {
+        "errorType": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "param": {
+          "type": "string"
+        }
+      }
+    },
+    "StringResponse": {
+      "type": "object",
+      "required": [
+        "response"
+      ],
+      "properties": {
+        "response": {
+          "type": "string"
+        }
+      }
+    },
+    "VcdVappSlaObjectCount": {
+      "type": "object",
+      "properties": {
+        "numVcdVapps": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of vApps protected under this SLA Domain."
+        }
+      }
+    }
+  }
+}

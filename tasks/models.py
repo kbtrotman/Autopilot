@@ -5,11 +5,11 @@ class TaskModel(models.Model):
     name = models.CharField(max_length=100, name="hrname")
     desc = models.TextField(max_length=300, name="description")
     product = models.CharField(max_length=100, name="type")
-    yaml_file = models.CharField(max_length=200, name="hrname")
-    t_input = models.CharField(max_length=100, name="input")
-    t_output_json = models.CharField(max_length=100, name="output")
+    yaml_file = models.CharField(max_length=200, null=True, blank=True, default=None)
+    t_input = models.TextField(max_length=500, name="input")
+    t_output_json = models.TextField(max_length=500, name="output")
     t_send_data = models.BooleanField(name="send")
-    t_emails = models.EmailField(max_length=100, name="email")
+    t_emails = models.EmailField(max_length=300, name="email")
 
 
     def __str__(self):

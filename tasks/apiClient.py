@@ -1,15 +1,17 @@
 from bravado.client import SwaggerClient
 from .models import TaskModel
+from .static.tasks.lib.debug_logging import send_log
 import json
 import requests
 import yaml
 
-def importNewAPIDef(file_path):
+def importNewAPIDef(file_path, filename):
+    send_log("Importing YAML file: " + file_path)
     # Load API definition
     api_data = loadAPIFromFile(file_path)
     if apiDidLoad(api_data):
         # Create the Swagger client
-        client = SwaggerClient.from_url(api_data['openapi_path'])
+        client = SwaggerClient.from_url('http://backend:8000/static/tasks/defs/' + filename)
         # Extract product name and description from the API spec
         product_name = api_data['name']
         description = api_data.get('description', '')
@@ -28,23 +30,19 @@ def update_api_endpoints(client, product_name, description, file_path):
             t_input = operation.get('parameters', [])
             t_output_json = operation.get('responses', {}).get('200', {}).get('schema', {}).get('type', 'unknown')
 
+            # Once we've parsed the OPenAPI def, we then
             # Save each API operation as a Task entry
             TaskModel.objects.get_or_create(
                 sname=operation_name,
                 hrname=operation_name,
-                desc=operation_desc,
-                product=product_name,
+                description=operation_desc,
+                type=product_name,
                 yaml_file=file_path,
-                t_input=t_input,
-                t_output_json=t_output_json,
+                input=t_input,
+                output=t_output_json,
                 defaults={'send': False}  # Set defaults as needed
             )
             print(f"Processed {method.upper()} {path} as task '{operation_name}'")
-
-
-def create_single_swagger_client(api_entry):
-    # Initialize and return a single Swagger client
-    return SwaggerClient.from_url(api_entry.openapi_path)
 
 
 # Function to load API definitions from an external JSON file (web link or local)
