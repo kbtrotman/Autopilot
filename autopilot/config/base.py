@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     #Django Requirements
     'mptt',
     'filer',
+    'daphne',
     'parler',
     'sekizai',
     'treebeard',
@@ -64,6 +65,8 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "allauth.usersessions",
     'rest_framework',
+    "django_eventstream",
+
     
     # Optional -- requires install using `django-allauth[socialaccount]`.
     # Enterprises shouldn;t use social providers, but if you have a burning
@@ -197,13 +200,21 @@ INSTALLED_APPS = [
 
 #For the RESTful API and JavaScript frontend authentication
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK = {    
+        'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'django_eventstream.renderers.SSEEventRenderer',
+        'django_eventstream.renderers.BrowsableAPIEventStreamRenderer'
+         # Add other renderers as needed
+    ],
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # Ensure users are authenticated
     ),
 }
 
-
+EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
+EVENTSTREAM_ALLOW_ORIGIN = '*'
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -251,7 +262,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "autopilot.wsgi.application"
-
+ASGI_APPLICATION = "autopilot.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

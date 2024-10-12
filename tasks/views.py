@@ -1,4 +1,5 @@
 import os
+import time
 from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -33,10 +34,7 @@ class TaskViewSet(ModelViewSet):
         with open(save_path, 'wb+') as destination:
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
-
-        # Import the new file (which should be standard YAML)
-        importNewAPIDef(save_path, filename)
-
+        
         # Return a success response with the file URL
         file_url = f'tasks/static/tasks/defs/{filename}'
         return Response({'status': 'success', 'file_url': file_url}, status=status.HTTP_201_CREATED)
