@@ -1,10 +1,8 @@
 # urls.py
-
-from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from tasks import views as task_view
-from tasks.importViewSet import ImportSseView  # Adjust the import if you renamed it or moved it
+from tasks.importViewSet import ImportSseView  # Import our custom log view
 from scripts import views as script_view
 from groups import views as group_view
 from users import views as user_view
@@ -23,14 +21,19 @@ router.register(r'functions', func_view.FunctViewSet)
 router.register(r'workflows', work_view.WorkViewSet)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
-    path("_allauth/", include("allauth.headless.urls")),  # Keep your allauth URLs
+    path("_allauth/", include("allauth.headless.urls")),
     path('api/', include(router.urls)),  # REST API endpoints
-    path('api/tasks/import/', ImportSseView.as_view(), name='import_sse'),  # Custom SSE view
+
+    # Add the ImportSseView endpoint for file import and streaming
+    path('api/import/', ImportSseView.as_view(), name='import-events'),
+
+    # Include django-eventstream path for channel registration
+    path('api/events/', include(django_eventstream.urls), {'channels': ['import']}),
     
-    # Eventstream endpoint for real-time events
-    path('events/', include(django_eventstream.urls), {'channels': ['import']}),  # Allow the 'import' channel
 ] + debug_toolbar_urls()
+
+
+
 
 

@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from .models import TaskModel
 from .serializers import TaskSerializer
-from .apiClient import importNewAPIDef
+from django.core.cache import cache
 
 class TaskViewSet(ModelViewSet):
     queryset = TaskModel.objects.all()
@@ -35,6 +35,9 @@ class TaskViewSet(ModelViewSet):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
         
+        # Store the filename in cache for retrieval in ImportSseView
+        cache.set('uploaded_filename', filename, timeout=300)  # 5 minutes expiration
+
         # Return a success response with the file URL
         file_url = f'tasks/static/tasks/defs/{filename}'
         return Response({'status': 'success', 'file_url': file_url}, status=status.HTTP_201_CREATED)

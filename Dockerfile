@@ -15,4 +15,5 @@ COPY ./setup ./setup/
 COPY ./triggers ./triggers/
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py daphne autopilot.asgi:application"]
+RUN PATH=/code/venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

@@ -1,6 +1,7 @@
 from bravado.client import SwaggerClient
 from .models import TaskModel
 from .static.tasks.lib.debug_logging import send_log
+from django_eventstream import send_event
 import json
 import requests
 import yaml
@@ -22,18 +23,24 @@ def importNewAPIDef(file_path, filename):
 def update_api_endpoints(client, product_name, description, file_path):
     # Iterate over all paths and operations in the client
     for path, path_item in client.swagger_spec.spec_dict['paths'].items():
-        send_log("Importing YAML file element [" + path_item + "] from path [" + path + "].")
+        path_description = f"Importing element from path: {path}\n"
+        send_event('import', 'message', {'text': path_description})
+        
         for method, operation in path_item.items():
-            send_log("Importing YAML file method [" + method + "] and operation [" + operation + "].")
-            operation_name = operation['operationId']
-            operation_desc = operation.get('summary', '')  # Description for each operation
+            # Extract operation details
+            operation_name = operation.get('operationId', 'Unnamed Operation')
+            operation_desc = operation.get('summary', 'No description available')
             
-            t_input_json = json.dumps(t_input) if t_input else '[]'
-            t_output_json = json.dumps(t_output_json) if isinstance(t_output_json, dict) else 'unknown'
-
-            # Collect input and output formats, assuming JSON is used
+            # Log a well-formatted message for each method and operation
+            method_message = f"Method: {method.upper()}, Operation: {operation_name}, Description: {operation_desc}\n"
+            send_event('import', 'message', {'text': method_message})
+ 
+             # Collect input and output formats, assuming JSON is used
             t_input = operation.get('parameters', [])
             t_output_json = operation.get('responses', {}).get('200', {}).get('schema', {}).get('type', 'unknown')
+                       
+            t_input_json = json.dumps(t_input) if t_input else '[]'
+            t_output_json = json.dumps(t_output_json) if isinstance(t_output_json, dict) else 'unknown'
 
             # Once we've parsed the OPenAPI def, we then
             # Save each API operation as a Task entry
@@ -44,7 +51,7 @@ def update_api_endpoints(client, product_name, description, file_path):
                     'hrname': operation_name,
                     'description': operation_desc,
                     'yaml_file': file_path,
-                    'input': json.dumps(t_input),
+                    'input': json.dumps(t_input_json),
                     'output': json.dumps(t_output_json),
                     'send': False  # Any other default values you may want to set
                 }
