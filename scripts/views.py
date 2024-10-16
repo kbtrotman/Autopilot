@@ -22,6 +22,13 @@ class ScriptViewSet(ModelViewSet):
         uploaded_file = request.FILES['file']
         filename = uploaded_file.name
 
+        # Retrieve additional form fields from request.data
+        arguments = request.data.get('arguments', '')
+        product = request.data.get('product', '')
+        description = request.data.get('description', '')
+        notify = request.data.get('notify', 'false').lower() == 'true'  # Convert to boolean
+        email = request.data.get('email', '')
+        
         # Define the custom path
         os_path = os.path.join(settings.BASE_DIR, 'static', 'scripts', 'bin')
         save_path = os.path.join(settings.BASE_DIR, 'static', 'scripts', 'bin', filename)
@@ -35,8 +42,17 @@ class ScriptViewSet(ModelViewSet):
                 destination.write(chunk)
 
         # Import the new script
-        updateScriptEntries(save_path, os_path, filename)
+        updateScriptEntries(save_path, os_path, filename, arguments, product, description, notify, email)
 
         # Return a success response with the file URL
-        file_url = f'/static/tasks/defs/{filename}'
-        return Response({'status': 'success', 'file_url': file_url}, status=status.HTTP_201_CREATED)
+        file_url = f'/static/scripts/bin/{filename}'
+        return Response({
+            'status': 'success', 
+            'file_url': file_url,
+            'arguments': arguments,
+            'product': product,
+            'description': description,
+            'notify': notify,
+            'email': email
+        }, status=status.HTTP_201_CREATED)
+

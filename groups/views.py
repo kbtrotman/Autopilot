@@ -8,4 +8,3 @@ from .serializers import GroupSerializer
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = GroupModel.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [IsAuthenticated]

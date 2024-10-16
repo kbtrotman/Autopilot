@@ -1,5 +1,6 @@
 # urls.py
 from django.urls import path, include
+from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from tasks import views as task_view
 from tasks.importViewSet import ImportSseView  # Import our custom log view
@@ -21,6 +22,7 @@ router.register(r'functions', func_view.FunctViewSet)
 router.register(r'workflows', work_view.WorkViewSet)
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("_allauth/", include("allauth.headless.urls")),
     path('api/', include(router.urls)),  # REST API endpoints

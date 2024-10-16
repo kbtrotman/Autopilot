@@ -92,7 +92,7 @@ function callRestApi(endpoint, method = 'GET', body) {
 }
 
 
-export default class Users extends React.Component {
+export default class Groups extends React.Component {
 
   constructor(props){
       super(props)
@@ -104,7 +104,7 @@ export default class Users extends React.Component {
 
   componentDidMount(){
     //CALL RESTful API
-    callRestApi("users/",'GET',null).then( res => {
+    callRestApi("groups/",'GET',null).then( res => {
         this.setState({
             loading:true,
             _tasks: res.data

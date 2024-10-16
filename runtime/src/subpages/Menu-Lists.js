@@ -18,10 +18,9 @@ const mainListItems = [
   const secondaryListItems = [
     { nest: 'True', text: 'Settings', icon: <SettingsRoundedIcon /> },
     { nest: 'False', text: 'About', icon: <InfoRoundedIcon /> },
-    { nest: 'False', text: 'AP Feedback', icon: <HelpRoundedIcon /> },
-    { nest: 'False', text: 'Check for updates', icon: <HelpRoundedIcon /> },
     { nest: 'False', text: 'Documentation', icon: <HelpRoundedIcon /> },
     { nest: 'False', text: 'Github Site', icon: <HelpRoundedIcon /> },
+    { nest: 'False', text: 'Feedback', icon: <HelpRoundedIcon /> },
   ];
 
   const SubListItems = [
@@ -36,8 +35,10 @@ const mainListItems = [
   const SubListItemsSect2 = [
     { list: 0, text: 'Tasks', icon: <AnalyticsRoundedIcon />, target: '/tasks' },
     { list: 0, text: 'Scripts', icon: <AnalyticsRoundedIcon />, target: '/scripts' },
-    { list: 0, text: 'Users', icon: <PeopleRoundedIcon />, target: '/users' },
-    { list: 0, text: 'Groups', icon: <PeopleRoundedIcon />, target: '/groups' },
+    { list: 0, text: 'Assets', icon: <PeopleRoundedIcon />, target: '/assets' },
+    { list: 0, text: 'Triggers', icon: <PeopleRoundedIcon />, target: '/triggers' },
+    { list: 0, text: 'Schedules', icon: <PeopleRoundedIcon />, target: '/schedules' },
+    { list: 0, text: 'Permissions', icon: <PeopleRoundedIcon />, target: '/permissions' },
   ];
 
   export {mainListItems, secondaryListItems, SubListItems, SubListItemsSect2};

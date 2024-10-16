@@ -29,10 +29,9 @@ const Drawer = styled(MuiDrawer)({
 export default function SideMenu() {
 
   const user = useUser()
-  let cur_user = user?.display;
-  if (cur_user == null){
-    cur_user = "Not logged in"
-  }
+  let cur_user = user?.display ?? "Not logged in";
+  let cur_user_name = user?.name ?? "No name available";
+
 
   return (
     <Drawer
@@ -68,7 +67,7 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
+          alt="No User"
           src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
         />
@@ -77,7 +76,7 @@ export default function SideMenu() {
             {cur_user}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+            {cur_user_name}
           </Typography>
         </Box>
         <OptionsMenu />

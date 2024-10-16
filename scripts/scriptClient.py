@@ -1,30 +1,26 @@
-
-from .models import ScriptModel
+import os
 import json
 import requests
+from .models import ScriptModel
+
     
 
-def updateScriptEntries(save_path, os_path, filename):
+def updateScriptEntries(save_path, os_path, filename, arguments, product, description, notify, email):
+
+    base_name = os.path.splitext(filename)[0]
 
     # Save script as a Script Database entry
-    TaskModel.objects.get_or_create(
-        s_name=filename,
-        f_name=save_path,
-        description="",
-        type="",
-        path=os_path,
-        args="",
-        s_output_json=t_output_json,
-        defaults={'send': False}  # Set defaults as needed
+    created = ScriptModel.objects.update_or_create(
+        s_name=base_name,
+        type=product,
+        defaults={
+            'f_name': filename,
+            'args': arguments,
+            'path': os_path,
+            'desc': description,
+            'output': "",
+            's_send_data': notify,
+            's_emails': email,
+        }
     )
-    print(f"Processed {method.upper()} {path} as task '{operation_name}'")
-
-    s_name = models.CharField(max_length=25, name="s_name")
-    f_name = models.CharField(max_length=150, name="f_name")
-    s_args = models.CharField(max_length=100, name="args")
-    path = models.CharField(max_length=150, name="path")
-    product = models.CharField(max_length=100, name="type")
-    desc = models.TextField(max_length=300, name="description")
-    s_output_json = models.CharField(max_length=100, name="output")
-    s_send_data = models.BooleanField(name="send")
-    s_emails = models.EmailField(max_length=100, name="email")
+    print(f"Processed {base_name} from entry '{save_path}'")

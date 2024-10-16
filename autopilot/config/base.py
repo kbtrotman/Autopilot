@@ -282,6 +282,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = 'users.UserModel'
+
 AUTH_PASSWORD_VALIDATORS = [
  #   {
  #       "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -357,7 +359,12 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # Removes the need for a username field
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_EMAIL_FIELD = 'email'  # Make sure this is the field in your custom user model
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 4
@@ -368,8 +375,6 @@ ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_PRESERVE_USERNAME_CASING = False
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 

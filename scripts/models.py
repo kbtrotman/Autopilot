@@ -7,10 +7,10 @@ class ScriptModel(models.Model):
     s_args = models.CharField(max_length=100, name="args")
     path = models.CharField(max_length=150, name="path")
     product = models.CharField(max_length=100, name="type")
-    desc = models.TextField(max_length=300, name="description")
+    desc = models.TextField(max_length=300)
     s_output_json = models.CharField(max_length=100, name="output")
-    s_send_data = models.BooleanField(name="send")
-    s_emails = models.EmailField(max_length=100, name="email")
+    s_send_data = models.BooleanField()
+    s_emails = models.EmailField(max_length=100)
 
 
     def __str__(self):

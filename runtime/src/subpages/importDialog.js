@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -19,7 +19,9 @@ function ImportDialog({ open, handleClose, importResults, isImportComplete }) {
         <DialogContentText>
           {importResults ? (
             <Typography variant="body1">
+              <pre>
               {importResults}
+              </pre>
             </Typography>
           ) : (
             <Typography variant="body2" color="textSecondary">

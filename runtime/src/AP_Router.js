@@ -7,10 +7,12 @@ import Home from './subpages/Home-Dashboard';
 import PleaseLogin from './subpages/PleaseLogin';
 import Tasks from './subpages/Tasks';
 import Scripts from './subpages/Scripts';
-import Users from './subpages/Users';
-import Groups from './subpages/Groups';
+import Permissions from './subpages/Permissions';
 import Function from './subpages/Function';
 import Workflow from './subpages/Workflow';
+import Assets from './subpages/Assets';
+import Triggers from './subpages/Triggers';
+import Schedules from './subpages/Schedules';
 // User Authentication Routers Here:
 import Login from './account/Login'
 import RequestLoginCode from './account/RequestLoginCode'
@@ -69,12 +71,8 @@ function createRouter (config) {
           element: <AuthenticatedRoute><Tasks /></AuthenticatedRoute>
         },
         {
-          path: "users/",
-          element: <AuthenticatedRoute><Users /></AuthenticatedRoute>
-        },
-        {
-          path: "groups/",
-          element: <AuthenticatedRoute><Groups /></AuthenticatedRoute>
+          path: "permissions/",
+          element: <AuthenticatedRoute><Permissions /></AuthenticatedRoute>
         },
         {
           path: "functions/",
@@ -83,6 +81,18 @@ function createRouter (config) {
         {
           path: "workflows/",
           element: <AuthenticatedRoute><Workflow /></AuthenticatedRoute>
+        },
+        {
+          path: "assets/",
+          element: <AuthenticatedRoute><Assets /></AuthenticatedRoute>
+        },
+        {
+          path: "triggers/",
+          element: <AuthenticatedRoute><Triggers /></AuthenticatedRoute>
+        },
+        {
+          path: "schedules/",
+          element: <AuthenticatedRoute><Schedules /></AuthenticatedRoute>
         },
         {
           path: '/account/login',

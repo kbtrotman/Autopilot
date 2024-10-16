@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Copyright from '../internals/components/Copyright';
 import axios from 'axios';
 import ImportDialog from './importDialog';
@@ -88,7 +90,7 @@ const callRestApi = (endpoint, method = 'GET', body) => {
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [setSelectedFile] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [importResults, setImportResults] = useState('');
   const [isImportComplete, setIsImportComplete] = useState(false);
@@ -191,6 +193,27 @@ export default function Tasks() {
         Upload API Definition
       </Button>
 
+      <Button
+        variant="contained"
+        startIcon={<EditIcon />}
+        onClick={() => {
+          document.getElementById('meth-edit').click();
+        }}
+      >
+        Edit Selected
+      </Button>
+
+      <Button
+        variant="contained"
+        startIcon={<DeleteIcon />}
+        onClick={() => {
+          document.getElementById('meth-edit').click();
+        }}
+      >
+        Delete Selected
+      </Button>
+
+      <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}> 
       <DataGrid
         autoHeight
         checkboxSelection
@@ -205,8 +228,11 @@ export default function Tasks() {
         pageSizeOptions={[10, 20, 50]}
         density="compact"
       />
-      
-      {/* Import Dialog */}
+        <Copyright sx={{ my: 4 }} />
+      </Box>
+
+      { /* Import Dialog */ }
+
       <ImportDialog
         open={dialogOpen}
         handleClose={handleDialogClose}
