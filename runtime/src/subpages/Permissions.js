@@ -7,80 +7,14 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
+import UserDialog from './dialogs/userDialog';
+import GroupDialog from './dialogs/groupDialog';
+import TenantDialog from './dialogs/tenantDialog';
+import LDAPDialog from './dialogs/ldapDialog';
+import {userColumns, groupColumns, tenantColumns, ldapColumns} from './dataGridColumns';
 import axios from 'axios';
 
 let API_URL = 'http://backend:8000/api';
-
-
-// pri_group = models.CharField(max_length=100, name="pri_grp")
-// ad_groups = models.CharField(max_length=100, name="ad_grps")
-// role = models.CharField(max_length=100, name="role")
-// remote = models.BooleanField(default=False)
-// dashboard = models.CharField(max_length=25, name="dashboard")
-// favorites = models.CharField(max_length=100)
-
-
-const columns = [
-  {
-    field: 'email',
-    headerName: 'E-mail',
-    width: 150,
-    editable: false,
-  },
-  {
-    field: 'name',
-    headerName: 'Name',
-    width: 100,
-    editable: true,
-  },
-  {
-    field: 'is_staff',
-    headerName: 'Staff?',
-    type: 'boolean',
-    width: 20,
-    editable: true,
-  },
-  {
-    field: 'is_admin',
-    headerName: 'Admin?',
-    type: 'boolean',
-    sortable: true,
-    width: 20,
-  },
-  {
-    field: 'is_active',
-    headerName: 'Enabled?',
-    type: 'boolean',
-    sortable: true,
-    width: 20,
-  },
-  {
-    field: 'is_tenant_admin',
-    headerName: 'Tenant Admin?',
-    type: 'boolean',
-    sortable: true,
-    width: 20,
-  },
-  {
-    field: 'tenant',
-    headerName: 'Tenant',
-    sortable: true,
-    width: 50,
-  },
-  {
-    field: 'phone',
-    headerName: 'Phone',
-    type: 'boolean',
-    sortable: true,
-    width: 50,
-  },
-  {
-    field: 'location',
-    headerName: 'Location',
-    sortable: true,
-    width: 200,
-  },
-];
 
 
 function callRestApi(endpoint, method = 'GET', body) {
@@ -109,62 +43,97 @@ export default class Permissions extends React.Component {
       loading: false,
       _data: [],
       value: 0, // Track the current tab
+      columns: userColumns,
+      btn: "User",
+      isDialogOpen: false, // Track whether the dialog is open
     };
   }
 
   componentDidMount() {
-    // Load data for the initial tab on mount
-    this.loadDataForTab(0);
+    this.loadDataForTab(0); // Load data for the initial tab on mount
   }
 
-  // Function to load data based on the selected tab
   loadDataForTab = (tabIndex) => {
     this.setState({ loading: false });
 
-    // Determine endpoint based on tab index
+    // Determine endpoint, columns, and button label based on tab index
     let endpoint;
+    let columns;
+    let btn;
+
     switch (tabIndex) {
       case 0:
         endpoint = "users/";
+        columns = userColumns;
+        btn = "User";
         break;
       case 1:
         endpoint = "groups/";
+        columns = groupColumns;
+        btn = "Group";
         break;
       case 2:
         endpoint = "tenants/";
+        columns = tenantColumns;
+        btn = "Tenant";
         break;
       case 3:
         endpoint = "ldap/";
+        columns = ldapColumns;
+        btn = "Mapping";
         break;
       default:
-        endpoint = "users/"; // Default to users if no match
+        endpoint = "users/";
+        columns = userColumns;
+        btn = "User";
     }
 
     // Make the API call
     callRestApi(endpoint, 'GET', null).then((res) => {
-      if (res && res.data) {
-        this.setState({
-          loading: true,
-          _data: res.data,
-        });
-      } else {
-        console.error(`Failed to load data for ${endpoint}`);
-        this.setState({ loading: true, _data: [] });
-      }
+      this.setState({
+        loading: true,
+        _data: res?.data || [],
+        columns: columns,
+        btn: btn,
+      });
     }).catch(err => {
       console.error('Error fetching data:', err);
       this.setState({ loading: true, _data: [] });
     });
   };
 
-  // Handle tab change
   handleChange = (event, newValue) => {
     this.setState({ value: newValue });
-    this.loadDataForTab(newValue);  // Load the corresponding data when the tab changes
+    this.loadDataForTab(newValue); // Load the corresponding data when the tab changes
+  };
+
+  openDialog = () => {
+    this.setState({ isDialogOpen: true });
+  };
+
+  closeDialog = () => {
+    this.setState({ isDialogOpen: false });
+  };
+
+  renderDialog = () => {
+    const { value } = this.state;
+
+    switch (value) {
+      case 0:
+        return <UserDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+      case 1:
+        return <GroupDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+      case 2:
+        return <TenantDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+      case 3:
+        return <LDAPDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+      default:
+        return null;
+    }
   };
 
   render() {
-    const { loading, _tasks, value } = this.state;
+    const { loading, _data, columns, value, btn } = this.state;
 
     if (!loading) {
       return <h4>Loading...</h4>;
@@ -200,7 +169,7 @@ export default class Permissions extends React.Component {
             size="small"
             sx={{ mt: 2 }}
           >
-            <Button>Add Task</Button>
+            <Button onClick={this.openDialog}>Add {btn}</Button>
             <Button>Edit Selected</Button>
             <Button>Delete Selected</Button>
           </ButtonGroup>
@@ -212,7 +181,7 @@ export default class Permissions extends React.Component {
             autoHeight
             checkboxSelection
             columns={columns}
-            rows={this._data}
+            rows={_data}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             }
@@ -224,7 +193,11 @@ export default class Permissions extends React.Component {
           />
           <Copyright sx={{ my: 4 }} />
         </Box>
+
+        {/* Dialog - Renders conditionally based on tab */}
+        {this.renderDialog()}
       </Box>
     );
   }
 }
+

@@ -30,10 +30,11 @@ INSTALLED_APPS = [
     'users',
     'groups',
     'scripts',
+    'tenants',
     'triggers',
+    'workflows',
     'schedules',
     'functions',
-    'workflows',
     #Django Requirements
     'mptt',
     'filer',

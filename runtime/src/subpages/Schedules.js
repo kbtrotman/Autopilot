@@ -104,7 +104,7 @@ export default class Groups extends React.Component {
 
   componentDidMount(){
     //CALL RESTful API
-    callRestApi("groups/",'GET',null).then( res => {
+    callRestApi("schedules/",'GET',null).then( res => {
         this.setState({
             loading:true,
             _tasks: res.data
@@ -129,7 +129,7 @@ export default class Groups extends React.Component {
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
 
         <Typography color="blue" component="h2" variant="h6" sx={{ mb: 2 }}>
-            Tasks
+            Schedules
           </Typography>
 
 
@@ -139,7 +139,7 @@ export default class Groups extends React.Component {
           color='inherit'
           size='small'
         >
-          <Button>Add Task</Button>
+          <Button>Add Schedule</Button>
           <Button>Edit Selected</Button>
           <Button>Delete Selected</Button>
         </ButtonGroup>

@@ -154,7 +154,7 @@ export default class Tasks extends React.Component {
   };
 
   render() {
-    const { loading, _tasks, dialogOpen, isUploadComplete } = this.state;
+    const { loading, _scripts, dialogOpen, isUploadComplete } = this.state;
 
     if (!loading) {
       return <h4>Loading...</h4>;
@@ -212,7 +212,7 @@ export default class Tasks extends React.Component {
             autoHeight
             checkboxSelection
             columns={columns}
-            rows={this.state._scripts}
+            rows={_scripts}
             pageSizeOptions={[10, 20, 50]}
             density="compact"
           />
