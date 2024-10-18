@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'setup',
     'users',
     'groups',
+    'assets',
     'scripts',
     'tenants',
     'triggers',

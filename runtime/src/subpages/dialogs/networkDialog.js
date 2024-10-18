@@ -6,37 +6,35 @@ import {
   DialogActions,
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Grid,
 } from '@mui/material';
 
-function CloudDialog({ open, handleClose, isUploadComplete, onSubmit }) {
-  // Set state for all fields from your Cloud model
-  const [vendor, setVendor] = useState('');
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [terraform, setTerraform] = useState(false);
-  const [api_only, setApiOnly] = useState(false);
+function NetworkDialog({ open, handleClose, isUploadComplete, onSubmit }) {
+  // Set state for all fields from your Network model
+  const [subnet, setSubnet] = useState('');
+  const [vlan_id, setVlanId] = useState('');
+  const [publicNetwork, setPublic] = useState('');
+  const [firewalled, setFirewalled] = useState('');
+  const [proxy, setProxy] = useState('');
 
   const [isFormComplete, setIsFormComplete] = useState(false); // Track if the form is complete
 
   // Validation to check if required fields are filled
   useEffect(() => {
-    if (vendor.trim() && login.trim() && password.trim()) {
+    if (subnet.trim() && vlan_id.trim()) {
       setIsFormComplete(true);
     } else {
       setIsFormComplete(false);
     }
-  }, [vendor, login, password]);
+  }, [subnet, vlan_id]);
 
   const handleFormSubmit = () => {
     const formData = {
-      vendor,
-      login,
-      password,
-      terraform,
-      api_only,
+      subnet,
+      vlan_id,
+      public: publicNetwork,
+      firwalled: firewalled,
+      proxy,
     };
     onSubmit(formData);  // Pass data to the parent component
     handleClose();       // Close the dialog
@@ -44,60 +42,54 @@ function CloudDialog({ open, handleClose, isUploadComplete, onSubmit }) {
 
   return (
     <Dialog open={open} onClose={isUploadComplete ? handleClose : null} fullWidth maxWidth="sm">
-      <DialogTitle>Add a Cloud Provider</DialogTitle>
+      <DialogTitle>Add a Network</DialogTitle>
       <DialogContent dividers>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Vendor"
+              label="Subnet"
               variant="outlined"
-              value={vendor}
-              onChange={(e) => setVendor(e.target.value)}
+              value={subnet}
+              onChange={(e) => setSubnet(e.target.value)}
               required
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Login"
+              label="VLAN ID"
               variant="outlined"
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
+              value={vlan_id}
+              onChange={(e) => setVlanId(e.target.value)}
               required
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Password"
+              label="Public"
               variant="outlined"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              value={publicNetwork}
+              onChange={(e) => setPublic(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={terraform}
-                  onChange={(e) => setTerraform(e.target.checked)}
-                />
-              }
-              label="Supports Terraform?"
+            <TextField
+              fullWidth
+              label="Firewalled"
+              variant="outlined"
+              value={firewalled}
+              onChange={(e) => setFirewalled(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={api_only}
-                  onChange={(e) => setApiOnly(e.target.checked)}
-                />
-              }
-              label="API Only Access?"
+            <TextField
+              fullWidth
+              label="Proxy"
+              variant="outlined"
+              value={proxy}
+              onChange={(e) => setProxy(e.target.value)}
             />
           </Grid>
         </Grid>
@@ -114,4 +106,4 @@ function CloudDialog({ open, handleClose, isUploadComplete, onSubmit }) {
   );
 }
 
-export default CloudDialog;
+export default NetworkDialog;

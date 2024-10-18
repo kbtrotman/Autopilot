@@ -7,9 +7,9 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
-import ServerDialog from './dialogs/userDialog';
-import ApplianceDialog from './dialogs/groupDialog';
-import NetworkDialog from './dialogs/tenantDialog';
+import ServerDialog from './dialogs/serverDialog';
+import ApplianceDialog from './dialogs/applianceDialog';
+import NetworkDialog from './dialogs/networkDialog';
 import CloudDialog from './dialogs/cloudDialog';
 import {serverColumns, applianceColumns, networkColumns, cloudColumns} from './dataGridColumns';
 import axios from 'axios';
@@ -36,7 +36,7 @@ function callRestApi(endpoint, method = 'GET', body) {
 }
 
 
-export default class Permissions extends React.Component {
+export default class Assets extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,9 +78,9 @@ export default class Permissions extends React.Component {
         btn = "Network";
         break;
       case 3:
-        endpoint = "ldap/";
+        endpoint = "clouds/";
         columns = cloudColumns;
-        btn = "Good Question";
+        btn = "Cloud Vendor";
         break;
       default:
         endpoint = "servers/";
@@ -115,18 +115,47 @@ export default class Permissions extends React.Component {
     this.setState({ isDialogOpen: false });
   };
 
+  // New function to handle form submissions
+  submitData = (formData) => {
+    let endpoint;
+    switch (this.state.value) {
+      case 0:
+        endpoint = "servers/add/";
+        break;
+      case 1:
+        endpoint = "appliances/add/";
+        break;
+      case 2:
+        endpoint = "networks/add/";
+        break;
+      case 3:
+        endpoint = "clouds/add";
+        break;
+      default:
+        return;
+    }
+
+    // Use callRestApi to post the form data
+    callRestApi(endpoint, 'POST', formData).then(() => {
+      this.closeDialog();
+      this.loadDataForTab(this.state.value); // Reload the data to reflect the new item
+    }).catch((error) => {
+      console.error('Error adding new item:', error);
+    });
+  };
+
   renderDialog = () => {
-    const { value } = this.state;
+    const { value, isDialogOpen } = this.state;
 
     switch (value) {
       case 0:
-        return <ServerDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <ServerDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 1:
-        return <ApplianceDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <ApplianceDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 2:
-        return <NetworkDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <NetworkDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 3:
-        return <CloudDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <CloudDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       default:
         return null;
     }

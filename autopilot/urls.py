@@ -10,6 +10,7 @@ from users import views as user_view
 from functions import views as func_view
 from workflows import views as work_view
 from tenants import views as tenant_view
+from assets import views as asset_view
 from debug_toolbar.toolbar import debug_toolbar_urls
 import django_eventstream
 
@@ -22,6 +23,10 @@ router.register(r'users', user_view.UserViewSet)
 router.register(r'functions', func_view.FunctViewSet)
 router.register(r'workflows', work_view.WorkViewSet)
 router.register(r'tenants', tenant_view.TenantViewSet)
+router.register(r'servers', asset_view.ServerViewSet)
+router.register(r'appliances', asset_view.ApplianceViewSet)
+router.register(r'networks', asset_view.NetworkViewSet)
+router.register(r'clouds', asset_view.CloudViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,12 +35,14 @@ urlpatterns = [
     path('api/', include(router.urls)),  # REST API endpoints
 
     # Add the ImportSseView endpoint for file import and streaming
-    path('api/import/', ImportSseView.as_view(), name='import-events'),
+    path('api/import/', ImportSseView.as_view(), name='import_events'),
 
     # Include django-eventstream path for channel registration
     path('api/events/', include(django_eventstream.urls), {'channels': ['import']}),
     
 ] + debug_toolbar_urls()
+
+
 
 
 

@@ -10,23 +10,23 @@ import {
 } from '@mui/material';
 
 function GroupDialog({ open, handleClose, isUploadComplete, onSubmit }) {
-  const [hrname, setHrname] = useState(''); // Renamed from 'name' to 'hrname' for permissions
-  const [description, setDescription] = useState('');
+  const [name, setGroup] = useState(''); // Renamed from 'name' to 'group' for permissions
+  const [desc, setDescription] = useState('');
   const [isFormComplete, setIsFormComplete] = useState(false); // Track if the form is complete
 
   useEffect(() => {
     // Check if required fields are filled
-    if (hrname.trim()) {
+    if (name.trim()) {
       setIsFormComplete(true);
     } else {
       setIsFormComplete(false);
     }
-  }, [hrname]); // Depend on hrname and description state
+  }, [name]); // Depend on group and description state
 
   const handleFormSubmit = () => {
     const formData = {
-      hrname,
-      description,
+      name,
+      desc,
     };
     onSubmit(formData);  // Pass data to the parent component
     handleClose();       // Close the dialog
@@ -42,8 +42,8 @@ function GroupDialog({ open, handleClose, isUploadComplete, onSubmit }) {
               fullWidth
               label="Group Name"
               variant="outlined"
-              value={hrname}
-              onChange={(e) => setHrname(e.target.value)}
+              value={name}
+              onChange={(e) => setGroup(e.target.value)}
               required // Optional for visual indicator
             />
           </Grid>
@@ -54,7 +54,7 @@ function GroupDialog({ open, handleClose, isUploadComplete, onSubmit }) {
               multiline
               rows={3}
               variant="outlined"
-              value={description}
+              value={desc}
               onChange={(e) => setDescription(e.target.value)}
               required // Optional for visual indicator
             />

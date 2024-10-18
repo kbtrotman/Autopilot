@@ -48,7 +48,7 @@ export default function MenuContent() {
       {/* Second Section: Secondary List Items */}
       <List dense>
         {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+          <ListItem key={index} disablePadding sx={{ display: 'block' }} >
             <ListItemButton onClick={() => handleToggle(`secondary-${index}`)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text}> </ListItemText>

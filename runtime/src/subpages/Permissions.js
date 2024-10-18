@@ -17,7 +17,7 @@ import axios from 'axios';
 let API_URL = 'http://backend:8000/api';
 
 
-function callRestApi(endpoint, method = 'GET', body) {
+function callRestApi(endpoint, method, body) {
   const sessionToken = window.sessionStorage.getItem('sessionToken');
   const headers = { 'Accept': 'application/json' };
   if (sessionToken) {
@@ -34,7 +34,6 @@ function callRestApi(endpoint, method = 'GET', body) {
     console.error('Request failed:', err);
   });
 }
-
 
 export default class Permissions extends React.Component {
   constructor(props) {
@@ -115,18 +114,47 @@ export default class Permissions extends React.Component {
     this.setState({ isDialogOpen: false });
   };
 
+  // New function to handle form submissions
+  submitData = (formData) => {
+    let endpoint;
+    switch (this.state.value) {
+      case 0:
+        endpoint = "users/add/";
+        break;
+      case 1:
+        endpoint = "groups/add/";
+        break;
+      case 2:
+        endpoint = "tenants/add/";
+        break;
+      case 3:
+        endpoint = "ldap/map";
+        break;
+      default:
+        return;
+    }
+
+    // Use callRestApi to post the form data
+    callRestApi(endpoint, 'POST', formData).then(() => {
+      this.closeDialog();
+      this.loadDataForTab(this.state.value); // Reload the data to reflect the new item
+    }).catch((error) => {
+      console.error('Error adding new item:', error);
+    });
+  };
+
   renderDialog = () => {
-    const { value } = this.state;
+    const { value, isDialogOpen } = this.state;
 
     switch (value) {
       case 0:
-        return <UserDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <UserDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 1:
-        return <GroupDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <GroupDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 2:
-        return <TenantDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <TenantDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       case 3:
-        return <LDAPDialog open={this.state.isDialogOpen} handleClose={this.closeDialog} />;
+        return <LDAPDialog open={isDialogOpen} handleClose={this.closeDialog} onSubmit={this.submitData} />;
       default:
         return null;
     }
@@ -200,4 +228,3 @@ export default class Permissions extends React.Component {
     );
   }
 }
-
