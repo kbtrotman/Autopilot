@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  height: 100vh; /* Take full viewport height */
+}
+
+.toolbar, .properties-panel {
+  width: 200px; /* Set fixed width for the toolbar and properties panel */
+  padding: 10px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ccc;
+}
+
+.canvas {
+  flex: 1; /* This makes the canvas take the remaining available space */
+  background-color: white;
+  display: flex;
+  align-items: center; /* Vertically center the canvas content */
+  justify-content: center; /* Horizontally center the canvas content */
+}
+
+.properties-panel {
+  border-left: 1px solid #ccc;
+}
+
+.toolbar h4, .properties-panel h4 {
+  margin-bottom: 10px;
+}
+
+.shape {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+  
+  
+
+  
+
+  

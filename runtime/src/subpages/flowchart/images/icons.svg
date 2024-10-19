@@ -1,0 +1,52 @@
+<!-- Start/End (Oval) -->
+<svg width="50" height="30">
+  <ellipse cx="25" cy="15" rx="25" ry="15" style="fill:lightblue;stroke:black;stroke-width:2" />
+  <text x="15" y="20" fill="black" font-size="12">Start</text>
+</svg>
+
+<!-- Process (Rectangle) -->
+<svg width="50" height="30">
+  <rect width="50" height="30" style="fill:lightgreen;stroke:black;stroke-width:2" />
+  <text x="15" y="20" fill="black" font-size="12">Process</text>
+</svg>
+
+<!-- Decision (Diamond) -->
+<svg width="50" height="50">
+  <polygon points="25,0 50,25 25,50 0,25" style="fill:orange;stroke:black;stroke-width:2" />
+  <text x="15" y="30" fill="black" font-size="12">?</text>
+</svg>
+
+<!-- Input/Output (Parallelogram) -->
+<svg width="50" height="30">
+  <polygon points="0,0 40,0 50,30 10,30" style="fill:lightcoral;stroke:black;stroke-width:2" />
+  <text x="15" y="20" fill="black" font-size="12">I/O</text>
+</svg>
+
+<!-- Document -->
+<svg width="50" height="40">
+  <rect width="50" height="30" style="fill:white;stroke:black;stroke-width:2" />
+  <line x1="10" y1="30" x2="40" y2="30" style="stroke:black;stroke-width:2" />
+  <line x1="10" y1="20" x2="40" y2="20" style="stroke:black;stroke-width:2" />
+  <line x1="10" y1="10" x2="40" y2="10" style="stroke:black;stroke-width:2" />
+  <text x="10" y="35" fill="black" font-size="12">Doc</text>
+</svg>
+
+<!-- Data Storage (Cylinder) -->
+<svg width="50" height="60">
+  <ellipse cx="25" cy="10" rx="25" ry="10" style="fill:lightgray;stroke:black;stroke-width:2" />
+  <rect x="0" y="10" width="50" height="40" style="fill:lightgray;stroke:black;stroke-width:2" />
+  <ellipse cx="25" cy="50" rx="25" ry="10" style="fill:lightgray;stroke:black;stroke-width:2" />
+  <text x="10" y="35" fill="black" font-size="12">DB</text>
+</svg>
+
+<!-- Connector (Circle) -->
+<svg width="30" height="30">
+  <circle cx="15" cy="15" r="15" style="fill:yellow;stroke:black;stroke-width:2" />
+  <text x="10" y="20" fill="black" font-size="12">O</text>
+</svg>
+
+<!-- Preparation (Hexagon) -->
+<svg width="60" height="40">
+  <polygon points="15,0 45,0 60,20 45,40 15,40 0,20" style="fill:lightpink;stroke:black;stroke-width:2" />
+  <text x="15" y="25" fill="black" font-size="12">Prep</text>
+</svg>
