@@ -129,7 +129,7 @@ export default class Assets extends React.Component {
         endpoint = "networks/add/";
         break;
       case 3:
-        endpoint = "clouds/add";
+        endpoint = "clouds/add/";
         break;
       default:
         return;

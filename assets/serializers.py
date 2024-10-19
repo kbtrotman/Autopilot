@@ -47,7 +47,7 @@ class ApplianceCreateSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         # Create the TenantModel object from validated data
-        return models.TenantModel.objects.create(**validated_data) 
+        return models.ApplianceModel.objects.create(**validated_data) 
 
 
 class NetworkCreateSerializer(serializers.ModelSerializer):
