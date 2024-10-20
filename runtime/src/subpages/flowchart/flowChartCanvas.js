@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { dia, shapes } from '@joint/core';
+import { startEndPorts, pointPorts, inputOutputPorts, metricPorts, taskPorts, scriptPorts} from './flowPorts';
+import inputOutputIcon from './images/input_output.jpeg';
+import startEndIcon from './images/start_stop.png';
+import tasksIcon from './images/task.jpeg';
+import scriptsIcon from './images/script.jpeg';
+import pointIcon from './images/point.png';
+import metricIcon from './images/metric.jpeg';
 import './css/styles.css'; // Import styles for the layout
 
 function FlowChartCanvas() {
@@ -14,7 +21,7 @@ function FlowChartCanvas() {
   useEffect(() => {
     const graph = new dia.Graph();
     graphRef.current = graph;
-
+    
     const paper = new dia.Paper({
       el: paperRef.current,
       model: graph,
@@ -25,14 +32,41 @@ function FlowChartCanvas() {
       background: {
         color: 'lightgray',
       },
+      linkPinning: false,
+      defaultLink: () => new shapes.standard.Link(),
+      interactive: {
+        linkMove: true,   // Enable link creation between ports
+        elementMove: true, // Ensure elements can be moved
+        magnet: true,      // Ensure magnets (ports) are enabled for interaction
+      },
+      defaultRouter: {
+        name: 'manhattan',  // Use smooth routing by default for all links
+        args: { padding: 10 },  // Optional padding around obstacles
+      },
     });
 
+    // Event listener for when a link connects to another element's port
+    paper.on('link:connect', (linkView, evt, targetMagnet, targetView) => {
+      const sourceId = linkView.model.get('source').id;
+      const targetId = linkView.model.get('target').id;
+      const sourcePort = linkView.model.get('source').port;  // Source port name
+      const targetPort = linkView.model.get('target').port;  // Target port name
+      
+      console.log(sourcePort, targetPort);
+      // If valid source and target ports exist, create a link between them
+      if (sourceId && targetId && sourcePort && targetPort) {
+        const link = createLink(sourceId, sourcePort, targetId, targetPort);
+        graphRef.current.addCells([link]);  // Pass the link as an array
+      }
+    });
+    
+    // Event listener to update selected element on click
     paper.on('cell:pointerdown', (cellView) => {
       setSelectedElement(cellView.model);
       setElementColor(cellView.model.attr('body/fill') || '#000000');
       setElementLabel(cellView.model.attr('label/text') || '');
     });
-
+    
     return () => {
       paper.remove();
     };
@@ -52,14 +86,47 @@ function FlowChartCanvas() {
     }
   };
 
-  // Helper function to create a shape
-  const createShape = (ShapeType, { x, y }, size, bodyAttrs, labelText) => {
-    return new ShapeType({
+  const createImageShape = (imgSrc, { x, y }, size, labelText, portsConfig) => {
+
+    console.log('Creating image shape with ports: ', portsConfig);  // Debug log
+
+    return new shapes.standard.Image({
       position: { x, y },
       size: size,
-      attrs: { 
-        body: bodyAttrs,
-        label: { text: labelText, fill: 'black', fontSize: 12 }
+      attrs: {
+        image: {
+          'xlink:href': imgSrc,
+          width: size.width,
+          height: size.height,
+        },
+        label: {
+          text: labelText,
+          fill: 'black',
+          fontSize: 12,
+          refY: '100%',
+          yAlignment: 'middle',
+          xAlignment: 'middle',
+          ref: 'image',
+        },
+      },
+      ports: portsConfig,  // Correctly pass portsConfig here
+    });
+  };
+
+  const createLink = (sourceId, sourcePort, targetId, targetPort) => {
+    return new shapes.standard.Link({
+      source: { id: sourceId, port: sourcePort },  // Source element and port
+      target: { id: targetId, port: targetPort },  // Target element and port
+      attrs: {
+        line: {
+          stroke: 'black',
+          strokeWidth: 2,
+          targetMarker: {
+            type: 'path',
+            d: 'M 10 -5 0 0 10 5 Z',  // Arrow marker at the target
+            fill: 'black',
+          },
+        },
       },
     });
   };
@@ -67,40 +134,51 @@ function FlowChartCanvas() {
   // Add shapes to the canvas
   const addShapeToCanvas = (shapeType, x, y) => {
     let element;
-
-  // Usage
-  switch (shapeType) {
-    case 'start':
-      element = createShape(shapes.standard.Ellipse, { x, y }, { width: 100, height: 60 }, { fill: 'lightblue', stroke: 'black', strokeWidth: 2 }, 'Start');
-      break;
-
-    case 'decision':
-      element = new shapes.standard.Polygon({
-        position: { x, y },
-        size: { width: 100, height: 100 },
-        attrs: { 
-          body: { fill: 'orange', stroke: 'black', strokeWidth: 2 },
-          label: { text: '?', fill: 'black', fontSize: 12 }
-        },
-        points: '50,0 100,50 50,100 0,50'
-      });
-      break;
-
-    case 'input_output':
-      element = createShape(shapes.standard.Polygon, { x, y }, { width: 100, height: 60 }, { fill: 'lightcoral', stroke: 'black', strokeWidth: 2 }, 'I/O');
-      element.attr('body/points', '0,0 80,0 100,60 20,60');
-      break;
-
-    case 'document':
-      element = createShape(shapes.standard.Rectangle, { x, y }, { width: 100, height: 60 }, { fill: 'white', stroke: 'black', strokeWidth: 2 }, 'Doc');
-      break;
-
-    default:
-      return;
-  }
-
-    graphRef.current.addCell(element);
+  
+    console.log('Shape Type:', shapeType);  // Debug shape type
+    
+    switch (shapeType) {
+      case 'start':
+        console.log('Using Start Ports:', startEndPorts);  // Debug port config
+        element = createImageShape(startEndIcon, { x, y }, { width: 100, height: 60 }, 'Start', startEndPorts);
+        break;
+  
+      case 'point':
+        console.log('Using Point Ports:', pointPorts);  // Debug port config
+        element = createImageShape(pointIcon, { x, y }, { width: 100, height: 60 }, 'Decision', pointPorts);
+        break;
+  
+      case 'input_output':
+        console.log('Using IO Ports:', inputOutputPorts);  // Debug port config
+        element = createImageShape(inputOutputIcon, { x, y }, { width: 100, height: 60 }, 'I/O', inputOutputPorts);
+        break;
+  
+      case 'metric':
+        console.log('Using Metric Ports:', metricPorts);  // Debug port config
+        element = createImageShape(metricIcon, { x, y }, { width: 100, height: 60 }, 'Metric', metricPorts);
+        break;
+  
+      case 'task':
+        console.log('Using Task Ports:', taskPorts);  // Debug port config
+        element = createImageShape(tasksIcon, { x, y }, { width: 100, height: 60 }, 'Task', taskPorts);
+        break;
+  
+      case 'script':
+        console.log('Using Script Ports:', scriptPorts);  // Debug port config
+        element = createImageShape(scriptsIcon, { x, y }, { width: 100, height: 60 }, 'Script', scriptPorts);
+        break;
+  
+      default:
+        console.log('No shape type found.');
+        return;
+    }
+  
+    if (element) {
+      console.log('Adding element to graph:', element);  // Debug created element
+      graphRef.current.addCells(element);
+    }
   };
+    
 
   // Allow drag over
   const allowDrop = (event) => {
@@ -133,22 +211,16 @@ function FlowChartCanvas() {
             draggable="true"
             onDragStart={(event) => handleDragStart(event, 'start')}
           >
-            <svg width="40" height="30">
-              <ellipse cx="20" cy="15" rx="20" ry="15" style={{ fill: 'lightblue', stroke: 'black', strokeWidth: 2 }} />
-              <text x="10" y="20" fill="black" fontSize="10">Start</text>
-            </svg>
+            <img src={startEndIcon} alt="Start" width="100" height="60" />
           </div>
 
           {/* Decision (Diamond) */}
           <div
             className="shape diamond"
             draggable="true"
-            onDragStart={(event) => handleDragStart(event, 'decision')}
+            onDragStart={(event) => handleDragStart(event, 'point')}
           >
-            <svg width="40" height="40">
-              <polygon points="20,0 40,20 20,40 0,20" style={{ fill: 'orange', stroke: 'black', strokeWidth: 2 }} />
-              <text x="13" y="25" fill="black" fontSize="10">?</text>
-            </svg>
+            <img src={pointIcon} alt="Point" width="100" height="60" />
           </div>
 
           {/* Input/Output (Parallelogram) */}
@@ -157,25 +229,34 @@ function FlowChartCanvas() {
             draggable="true"
             onDragStart={(event) => handleDragStart(event, 'input_output')}
           >
-            <svg width="50" height="30">
-              <polygon points="0,0 40,0 50,30 10,30" style={{ fill: 'lightcoral', stroke: 'black', strokeWidth: 2 }} />
-              <text x="15" y="20" fill="black" fontSize="10">I/O</text>
-            </svg>
+            <img src={inputOutputIcon} alt="Input_Output" width="100" height="60" />
           </div>
           {/* Document (Rectangle with lines) */}
           <div
             className="shape document"
             draggable="true"
-            onDragStart={(event) => handleDragStart(event, 'document')}
+            onDragStart={(event) => handleDragStart(event, 'metric')}
           >
-            <svg width="40" height="30">
-              <rect width="40" height="30" style={{ fill: 'white', stroke: 'black', strokeWidth: 2 }} />
-              <line x1="10" y1="10" x2="30" y2="10" style={{ stroke: 'black', strokeWidth: 1 }} />
-              <line x1="10" y1="20" x2="30" y2="20" style={{ stroke: 'black', strokeWidth: 1 }} />
-              <text x="10" y="25" fill="black" fontSize="10">Doc</text>
-            </svg>
+            <img src={metricIcon} alt="Metric" width="100" height="60" />
+          </div>
+          {/* Document (Rectangle with task) */}
+          <div
+            className="shape rectangle"
+            draggable="true"
+            onDragStart={(event) => handleDragStart(event, 'task')}
+          >
+            <img src={tasksIcon} alt="Task" width="100" height="60" />
+          </div>
+
+          <div
+            className="shape rectangle"
+            draggable="true"
+            onDragStart={(event) => handleDragStart(event, 'script')}
+          >
+            <img src={scriptsIcon} alt="Script" width="100" height="60" />
           </div>
       </div>
+      {/* Document (Rectangle with task) */}
 
       {/* Canvas */}
       <div
