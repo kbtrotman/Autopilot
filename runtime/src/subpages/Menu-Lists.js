@@ -28,6 +28,7 @@ const mainListItems = [
     { list: 0, text: 'New Dashboard', icon: <AnalyticsRoundedIcon />, target: '/dashboard/new' },
     { list: 0, text: 'Select Dashboard', icon: <PeopleRoundedIcon />, target: '/dashboard/select' },
     { list: 0, text: 'Add to Favorites', icon: <PeopleRoundedIcon />, target: '/dashboard/favorites' },
+    { list: 4, text: 'Create Form', icon: <PeopleRoundedIcon />, target: '/forms' },
     { list: 4, text: 'Create Function', icon: <PeopleRoundedIcon />, target: '/functions' },
     { list: 4, text: 'Create Workflow', icon: <PeopleRoundedIcon />, target: '/workflows' },
   ];

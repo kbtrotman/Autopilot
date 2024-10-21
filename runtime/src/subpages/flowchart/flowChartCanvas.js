@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { dia, shapes } from '@joint/core';
-import { startEndPorts, pointPorts, inputOutputPorts, metricPorts, taskPorts, scriptPorts} from './flowPorts';
-import inputOutputIcon from './images/input_output.jpeg';
+import { startEndPorts, pointPorts, inputOutputPorts, formPorts, metricPorts, taskPorts, scriptPorts} from './flowPorts';
+import inputOutputIcon from './images/input_output.png';
 import startEndIcon from './images/start_stop.png';
-import tasksIcon from './images/task.jpeg';
-import scriptsIcon from './images/script.jpeg';
+import tasksIcon from './images/task.png';
+import scriptsIcon from './images/script.png';
 import pointIcon from './images/point.png';
-import metricIcon from './images/metric.jpeg';
+import metricIcon from './images/metric.png';
+import formIcon from './images/form.png';
 import './css/styles.css'; // Import styles for the layout
 
 function FlowChartCanvas() {
@@ -152,7 +153,12 @@ function FlowChartCanvas() {
         console.log('Using IO Ports:', inputOutputPorts);  // Debug port config
         element = createImageShape(inputOutputIcon, { x, y }, { width: 100, height: 60 }, 'I/O', inputOutputPorts);
         break;
-  
+        
+      case 'form':
+        console.log('Using Form Ports:', formPorts);  // Debug port config
+        element = createImageShape(formIcon, { x, y }, { width: 100, height: 60 }, 'Form', formPorts);
+        break;
+
       case 'metric':
         console.log('Using Metric Ports:', metricPorts);  // Debug port config
         element = createImageShape(metricIcon, { x, y }, { width: 100, height: 60 }, 'Metric', metricPorts);
@@ -230,6 +236,14 @@ function FlowChartCanvas() {
             onDragStart={(event) => handleDragStart(event, 'input_output')}
           >
             <img src={inputOutputIcon} alt="Input_Output" width="100" height="60" />
+          </div>
+          {/* Form Input */}
+          <div
+            className="shape form"
+            draggable="true"
+            onDragStart={(event) => handleDragStart(event, 'form')}
+          >
+            <img src={formIcon} alt="form" width="100" height="60" />
           </div>
           {/* Document (Rectangle with lines) */}
           <div

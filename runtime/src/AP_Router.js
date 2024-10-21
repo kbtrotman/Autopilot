@@ -13,6 +13,7 @@ import Workflow from './subpages/Workflow';
 import Assets from './subpages/Assets';
 import Triggers from './subpages/Triggers';
 import Schedules from './subpages/Schedules';
+import Forms from './subpages/Forms';
 // User Authentication Routers Here:
 import Login from './account/Login'
 import RequestLoginCode from './account/RequestLoginCode'
@@ -73,6 +74,10 @@ function createRouter (config) {
         {
           path: "permissions/",
           element: <AuthenticatedRoute><Permissions /></AuthenticatedRoute>
+        },
+        {
+          path: "forms/",
+          element: <AuthenticatedRoute><Forms /></AuthenticatedRoute>
         },
         {
           path: "functions/",

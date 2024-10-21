@@ -11,6 +11,7 @@ from functions import views as func_view
 from workflows import views as work_view
 from tenants import views as tenant_view
 from assets import views as asset_view
+from forms import views as form_view
 from debug_toolbar.toolbar import debug_toolbar_urls
 import django_eventstream
 
@@ -27,6 +28,8 @@ router.register(r'servers', asset_view.ServerViewSet)
 router.register(r'appliances', asset_view.ApplianceViewSet)
 router.register(r'networks', asset_view.NetworkViewSet)
 router.register(r'clouds', asset_view.CloudViewSet)
+router.register(r'forms', form_view.FormViewSet)
+router.register(r'variables', form_view.VariableViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

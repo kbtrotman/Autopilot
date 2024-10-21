@@ -8,6 +8,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -24,6 +25,7 @@ export const startEndPorts = {
       },
       'out': {
         position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -51,6 +53,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -67,6 +70,7 @@ export const startEndPorts = {
       },
       'out1': {
         position: 'left',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -83,6 +87,7 @@ export const startEndPorts = {
       },
       'out2': {
         position: 'right',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -99,6 +104,7 @@ export const startEndPorts = {
       },
       'default': {
         position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -124,6 +130,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -140,6 +147,50 @@ export const startEndPorts = {
       },
       'out': {
         position: 'bottom',
+        anchor: 'center',
+        attrs: {
+          circle: {
+            r: 4,
+            magnet: true,
+            stroke: 'black',
+            strokeWidth: 2,
+            fill: '#ffffff',
+            width: 16,
+            height: 16,
+            x: -8,
+            y: 0,
+          },
+        },
+      },
+    },
+  };
+
+  export const formPorts = {
+    items: [
+      { id: 'metric_in', group: 'in' },   // custom input port
+      { id: 'metric_out', group: 'out' }, // custom output port
+    ],
+    groups: {
+      'in': {
+        position: 'top',
+        anchor: 'center',
+        attrs: {
+          circle: {
+            r: 4,
+            magnet: true,
+            stroke: 'black',
+            strokeWidth: 2,
+            fill: '#ffffff',
+            width: 16,
+            height: 16,
+            x: -8,
+            y: 0,
+          },
+        },
+      },
+      'out': {
+        position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -165,6 +216,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -181,6 +233,7 @@ export const startEndPorts = {
       },
       'out': {
         position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -206,6 +259,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -222,6 +276,7 @@ export const startEndPorts = {
       },
       'out': {
         position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -247,6 +302,7 @@ export const startEndPorts = {
     groups: {
       'in': {
         position: 'top',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,
@@ -263,6 +319,7 @@ export const startEndPorts = {
       },
       'out': {
         position: 'bottom',
+        anchor: 'center',
         attrs: {
           circle: {
             r: 4,

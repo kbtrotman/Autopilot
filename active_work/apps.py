@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CloudsConfig(AppConfig):
+class ActiveWorkConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'clouds'
+    name = 'active_work'

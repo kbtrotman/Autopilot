@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'tasks',
     'setup',
     'users',
+    'forms',
     'groups',
     'assets',
     'scripts',
