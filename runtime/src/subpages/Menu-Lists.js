@@ -31,6 +31,7 @@ const mainListItems = [
     { list: 4, text: 'Create Form', icon: <PeopleRoundedIcon />, target: '/forms' },
     { list: 4, text: 'Create Function', icon: <PeopleRoundedIcon />, target: '/functions' },
     { list: 4, text: 'Create Workflow', icon: <PeopleRoundedIcon />, target: '/workflows' },
+    { list: 4, text: 'Create User Menus', icon: <PeopleRoundedIcon />, target: '/usermenus' },
   ];
 
   const SubListItemsSect2 = [

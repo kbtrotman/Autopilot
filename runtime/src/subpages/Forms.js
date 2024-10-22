@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
 import { ReactFormBuilder } from 'react-form-builder2';
 import 'react-form-builder2/dist/app.css';
+import './formbuilder/css/style.css';
 import axios from 'axios';
 
 

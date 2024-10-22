@@ -14,6 +14,7 @@ import Assets from './subpages/Assets';
 import Triggers from './subpages/Triggers';
 import Schedules from './subpages/Schedules';
 import Forms from './subpages/Forms';
+import UserMenus from './subpages/UserMenus';
 // User Authentication Routers Here:
 import Login from './account/Login'
 import RequestLoginCode from './account/RequestLoginCode'
@@ -78,6 +79,10 @@ function createRouter (config) {
         {
           path: "forms/",
           element: <AuthenticatedRoute><Forms /></AuthenticatedRoute>
+        },
+        {
+          path: "usermenus/",
+          element: <AuthenticatedRoute><UserMenus /></AuthenticatedRoute>
         },
         {
           path: "functions/",
