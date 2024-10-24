@@ -17,17 +17,18 @@ const mainListItems = [
   
   const secondaryListItems = [
     { nest: 'True', text: 'Settings', icon: <SettingsRoundedIcon /> },
-    { nest: 'False', text: 'About', icon: <InfoRoundedIcon /> },
+    { nest: 'False', text: 'About', icon: <InfoRoundedIcon />, target: 'alert("Autopilot pre-release dev version. Use with extreme care.");'},
     { nest: 'False', text: 'Documentation', icon: <HelpRoundedIcon /> },
-    { nest: 'False', text: 'Github Site', icon: <HelpRoundedIcon /> },
-    { nest: 'False', text: 'Feedback', icon: <HelpRoundedIcon /> },
+    { nest: 'False', text: 'Github Site', icon: <HelpRoundedIcon />, target: 'http://github.com/kbtrotman/Autopilot' },
+    { nest: 'False', text: 'Feedback', icon: <HelpRoundedIcon />, target: 'mailto:kevintrotman@icloud.com?subject=Autopilot Feedback' },
   ];
 
   const SubListItems = [
-    { list: 0, text: 'Edit Dashboard', icon: <HomeRoundedIcon />, target: '/dashboard?edit' },
-    { list: 0, text: 'New Dashboard', icon: <AnalyticsRoundedIcon />, target: '/dashboard/new' },
-    { list: 0, text: 'Select Dashboard', icon: <PeopleRoundedIcon />, target: '/dashboard/select' },
-    { list: 0, text: 'Add to Favorites', icon: <PeopleRoundedIcon />, target: '/dashboard/favorites' },
+    { list: 0, text: 'My Dashboard (Home)', icon: <HomeRoundedIcon />, target: '/dashboard/' },
+    { list: 0, text: 'Edit Dashboard', icon: <HomeRoundedIcon />, target: '/dashboard/edit/' },
+    { list: 0, text: 'New Dashboard', icon: <AnalyticsRoundedIcon />, target: '/dashboard/new/' },
+    { list: 0, text: 'Select Dashboard', icon: <PeopleRoundedIcon />, target: '/dashboard/select/' },
+    { list: 0, text: 'Add to Favorites', icon: <PeopleRoundedIcon />, target: '/dashboard/favorites/' },
     { list: 4, text: 'Create Form', icon: <PeopleRoundedIcon />, target: '/forms' },
     { list: 4, text: 'Create Function', icon: <PeopleRoundedIcon />, target: '/functions' },
     { list: 4, text: 'Create Workflow', icon: <PeopleRoundedIcon />, target: '/workflows' },

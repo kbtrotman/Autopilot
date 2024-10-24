@@ -14,6 +14,14 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 640,
+      laptop: 1024,
+      desktop: 2440,  // Increased desktop size
+    },
+  },
 });
 
 export default theme;

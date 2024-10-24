@@ -18,59 +18,74 @@ export default function MenuContent() {
   };
 
   return (
-    <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
-      {/* First Section: Main List Items */}
-      <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={() => handleToggle(index)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
+<Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
+  {/* First Section: Main List Items */}
+  <List dense>
+    {mainListItems.map((item, index) => (
+      <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+        {item.nest === 'True' ? (
+          <ListItemButton onClick={() => handleToggle(index)}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
+        ) : (
+          <ListItemButton component={Link} to={item.target}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
+        )}
 
-            {/* Nested Items for Collapsible Menus */}
-            {item.nest === 'True' && (
-              <Collapse in={open[index]} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {SubListItems.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
-                    <ListItem key={subIndex} component={Link} to={subItem.target}>
-                      <ListItemIcon>{subItem.icon}</ListItemIcon>
-                      <ListItemText primary={subItem.text} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            )}
-          </ListItem>
-        ))}
-      </List>
+        {/* Nested Items for Collapsible Menus */}
+        {item.nest === 'True' && (
+          <Collapse in={open[index]} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {SubListItems.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
+                <ListItem key={subIndex} component={Link} to={subItem.target}>
+                  <ListItemIcon>{subItem.icon}</ListItemIcon>
+                  <ListItemText primary={subItem.text} />
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
+        )}
+      </ListItem>
+    ))}
+  </List>
 
-      {/* Second Section: Secondary List Items */}
-      <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }} >
-            <ListItemButton onClick={() => handleToggle(`secondary-${index}`)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text}> </ListItemText>
-            </ListItemButton>
+  {/* Second Section: Secondary List Items */}
+  <List dense>
+    {secondaryListItems.map((item, index) => (
+      <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+        {item.nest === 'True' ? (
+          <ListItemButton onClick={() => handleToggle(`secondary-${index}`)}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
+        ) : (
+          <ListItemButton component={Link} to={item.target}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
+        )}
 
-            {/* Nested Items for Collapsible Menus in Secondary List */}
-            {item.nest === 'True' && (
-              <Collapse in={open[`secondary-${index}`]} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {SubListItemsSect2.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
-                    <ListItem key={subIndex} component={Link} to={subItem.target}>
-                      <ListItemIcon>{subItem.icon}</ListItemIcon>
-                      <ListItemText primary={subItem.text} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            )}
-          </ListItem>
-        ))}
-      </List>
-    </Stack>
+        {/* Nested Items for Collapsible Menus in Secondary List */}
+        {item.nest === 'True' && (
+          <Collapse in={open[`secondary-${index}`]} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {SubListItemsSect2.filter((subItem) => subItem.list === index).map((subItem, subIndex) => (
+                <ListItem key={subIndex} component={Link} to={subItem.target}>
+                  <ListItemIcon>{subItem.icon}</ListItemIcon>
+                  <ListItemText primary={subItem.text} />
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
+        )}
+      </ListItem>
+    ))}
+  </List>
+</Stack>
+
   );
 }
 
