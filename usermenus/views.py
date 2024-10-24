@@ -1,36 +1,33 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework import viewsets, status
-from.serializers import UserMenuSerializer, UserMenuCreateSerializer
+from rest_framework.response import Response
+from rest_framework import viewsets
+from .serializers import UserMenuSerializer, UserMenuCreateSerializer
 from .models import UserMenusModel
 
-# Create your views here.
-
-
-class GroupViewSet(viewsets.ModelViewSet):
+class MenuViewSet(viewsets.ModelViewSet):
     queryset = UserMenusModel.objects.all()
     serializer_class = UserMenuSerializer
 
-    @api_view(['POST'])
-    def save_user_menu(request):
-        group = request.group
-        menu_json = request.data.get('menu_json')
-        
+    # POST method for adding/updating a menu for a group
+    @action(detail=False, methods=['post'], url_path='add/(?P<group_id>[^/.]+)', serializer_class=UserMenuCreateSerializer)
+    def post(self, request, group_id):
+        menu_json = request.data.get('menu_json')  # Menu data from request body
+
+        # Update or create menu for the specified group
         user_menu, created = UserMenusModel.objects.update_or_create(
-            group=group, 
+            group_id=group_id,  # Use the group_id directly from the URL
             defaults={'menu_json': menu_json}
         )
-        
-        return Response({'status': 'success'})
 
+        return Response({'status': 'success', 'message': 'Menu saved successfully'})
 
-    @api_view(['GET'])
-    def get_user_menu(request):
-        user = request.user
+    # GET method for retrieving a menu by group_id
+    @action(detail=False, methods=['get'], url_path='get/(?P<group_id>[^/.]+)', serializer_class=UserMenuSerializer)
+    def get(self, request, group_id):
         try:
-            user_menu = UserMenusModel.objects.get(user=user)
+            # Retrieve the menu for the specific group
+            user_menu = UserMenusModel.objects.get(group_id=group_id)
             return Response({'menu_json': user_menu.menu_json})
         except UserMenusModel.DoesNotExist:
             return Response({'menu_json': None})
+

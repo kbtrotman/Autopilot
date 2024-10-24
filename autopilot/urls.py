@@ -12,6 +12,7 @@ from workflows import views as work_view
 from tenants import views as tenant_view
 from assets import views as asset_view
 from forms import views as form_view
+from usermenus import views as usermenu_view
 from debug_toolbar.toolbar import debug_toolbar_urls
 import django_eventstream
 
@@ -30,6 +31,7 @@ router.register(r'networks', asset_view.NetworkViewSet)
 router.register(r'clouds', asset_view.CloudViewSet)
 router.register(r'forms', form_view.FormViewSet)
 router.register(r'variables', form_view.VariableViewSet)
+router.register(r'usermenus', usermenu_view.MenuViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

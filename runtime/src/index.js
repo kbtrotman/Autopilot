@@ -1,7 +1,8 @@
 // Everything here is written in React with Google MUI components:
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 // Our Theme Setup:
 import theme from './theme';
 // Our Authentication Setup:
@@ -17,10 +18,24 @@ import Router from "./AP_Router";
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 
+
+// Custom theme with modified breakpoints
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      mobile: 0,
+      tablet: 640,
+      laptop: 1024,
+      desktop: 2440,  // Increased desktop size
+    },
+  },
+});
+
     //
     //
 root.render(
   <ThemeProvider theme={theme}>
+    <CssBaseline />
     <AuthContextProvider>
       <Router />
     </AuthContextProvider>

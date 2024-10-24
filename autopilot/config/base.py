@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'workflows',
     'schedules',
     'functions',
+    'usermenus',
     #Django Requirements
     'mptt',
     'filer',
